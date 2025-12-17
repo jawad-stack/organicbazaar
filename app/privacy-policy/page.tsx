@@ -25,7 +25,7 @@ export default function PrivacyPage() {
           <section>
             <h2 className="text-2xl font-bold text-foreground mb-4">1. Introduction</h2>
             <p>
-              Organic Store ("we", "our", or "us") operates the organicbazaar.com website. This page informs you of our
+              Organic Store ("we", "our", or "us") operates the organicbazaar.online website. This page informs you of our
               policies regarding the collection, use, and disclosure of personal data when you use our Service and the
               choices you have associated with that data.
             </p>
@@ -103,3 +103,4 @@ export default function PrivacyPage() {
     </main>
   )
 }
+
