@@ -71,7 +71,7 @@ export default function FAQPage() {
       id: "bulk",
       question: "Do you offer bulk orders or wholesale?",
       answer:
-        "Yes, we offer special pricing for bulk and wholesale orders. Please contact our wholesale team at wholesale@organicbazaar.com for more information.",
+        "Yes, we offer special pricing for bulk and wholesale orders. Please get in touch with our wholesale team at jawadiqbal962@gmail.com for more information.",
     },
   ]
 
@@ -119,3 +119,4 @@ export default function FAQPage() {
     </main>
   )
 }
+
