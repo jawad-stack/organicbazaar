@@ -7,6 +7,6 @@ export default function robots(): MetadataRoute.Robots {
       allow: "/",
       disallow: ["/api/", "/admin/"],
     },
-    sitemap: "https://organicbazaar.com/sitemap.xml",
+    sitemap: "https://organicbazaar.online/sitemap.xml",
   }
 }
