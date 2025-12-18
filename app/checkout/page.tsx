@@ -43,7 +43,7 @@ export default function CheckoutPage() {
                 ✓ Secure checkout with encrypted payment
               </p>
               <p className="text-sm text-muted-foreground mb-4">
-                ✓ Free shipping on orders over $50
+                ✓ Free shipping on orders over Rs.1500
               </p>
               <p className="text-sm text-muted-foreground">
                 ✓ Money-back guarantee

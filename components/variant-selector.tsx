@@ -58,7 +58,7 @@ export function VariantSelector({ variants, onVariantSelect }: VariantSelectorPr
       {selectedVariant && (
         <div className="pt-4 border-t space-y-3 animate-fade-in">
           <p className="text-sm text-muted-foreground">SKU: {selectedVariant.sku}</p>
-          <p className="text-2xl font-bold text-primary">${selectedVariant.price.toFixed(2)}</p>
+          <p className="text-2xl font-bold text-primary">Rs.{selectedVariant.price.toFixed(2)}</p>
           <p
             className={`text-sm font-medium ${selectedVariant.stock > 0 ? "text-green-600 dark:text-green-400" : "text-red-600 dark:text-red-400"}`}
           >

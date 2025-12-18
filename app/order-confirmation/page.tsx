@@ -142,18 +142,18 @@ export default function OrderConfirmationPage() {
                     <p className="text-sm text-muted-foreground">{item.variantName}</p>
                     <p className="text-sm text-muted-foreground">Qty: {item.quantity}</p>
                   </div>
-                  <p className="font-medium">${((item.price || 0) * (item.quantity || 0)).toFixed(2)}</p>
+                  <p className="font-medium">Rs.{((item.price || 0) * (item.quantity || 0)).toFixed(2)}</p>
                 </div>
               ))}
             </div>
             <div className="space-y-2">
               <div className="flex justify-between text-sm">
                 <span className="text-muted-foreground">Shipping:</span>
-                <span>${(order.shippingCost || 0).toFixed(2)}</span>
+                <span>Rs.{(order.shippingCost || 0).toFixed(2)}</span>
               </div>
               <div className="flex justify-between text-lg font-bold pt-2 border-t">
                 <span>Total:</span>
-                <span>${(order.total || 0).toFixed(2)}</span>
+                <span>Rs.{(order.total || 0).toFixed(2)}</span>
               </div>
             </div>
           </Card>

@@ -10,7 +10,7 @@ interface ProductCardProps {
   id: string
   name: string
   slug: string
-  images: string[]
+  images: any[]
   variants: Array<{ price: number }>
 }
 
@@ -40,8 +40,9 @@ export function ProductCard({ id, name, slug, images, variants }: ProductCardPro
 
   const minPrice = Math.min(...variants.map((v) => v.price))
   const maxPrice = Math.max(...variants.map((v) => v.price))
-  const imageUrl = images?.[0] || "/placeholder.svg?height=300&width=300"
+  const imageUrl = images?.[0]?.url || images?.[0] || "/placeholder.svg?height=300&width=300"
 
+console.log("Image URL in ProductCard:", imageUrl);
   const renderStars = (rating: number) => {
     return (
       <div className="flex gap-0.5">
@@ -99,7 +100,7 @@ export function ProductCard({ id, name, slug, images, variants }: ProductCardPro
           )}
 
           <p className="text-sm text-muted-foreground mt-2">
-            {minPrice === maxPrice ? `$${minPrice.toFixed(2)}` : `$${minPrice.toFixed(2)} - $${maxPrice.toFixed(2)}`}
+            {minPrice === maxPrice ? `Rs.${minPrice.toFixed(2)}` : `Rs.${minPrice.toFixed(2)} - Rs.${maxPrice.toFixed(2)}`}
           </p>
         </div>
         <Button asChild className="w-full transition-all duration-200 group-hover:shadow-md" variant="default">

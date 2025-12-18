@@ -64,7 +64,7 @@ export default function AboutPage() {
               </li>
               <li className="flex items-start gap-3">
                 <span className="text-primary font-bold">✓</span>
-                <span>Fast & Free Shipping Over $50</span>
+                <span>Fast & Free Shipping Over Rs.1500</span>
               </li>
               <li className="flex items-start gap-3">
                 <span className="text-primary font-bold">✓</span>

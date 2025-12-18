@@ -33,15 +33,15 @@ export default function ShippingReturnsPage() {
                 <div className="space-y-3">
                   <div className="p-4 bg-muted/50 rounded">
                     <p className="font-semibold text-foreground">Standard Shipping (5-7 business days)</p>
-                    <p className="text-sm text-muted-foreground">$5.99 - FREE on orders over $50</p>
+                    <p className="text-sm text-muted-foreground">Rs.149.99 - FREE on orders over Rs.1500</p>
                   </div>
                   <div className="p-4 bg-muted/50 rounded">
                     <p className="font-semibold text-foreground">Express Shipping (2-3 business days)</p>
-                    <p className="text-sm text-muted-foreground">$14.99</p>
+                    <p className="text-sm text-muted-foreground">Rs.249.99</p>
                   </div>
                   <div className="p-4 bg-muted/50 rounded">
                     <p className="font-semibold text-foreground">Overnight Delivery (Next business day)</p>
-                    <p className="text-sm text-muted-foreground">$29.99 (orders placed before 2pm EST)</p>
+                    <p className="text-sm text-muted-foreground">Rs.499.99 (orders placed before 11amT)</p>
                   </div>
                 </div>
               </div>

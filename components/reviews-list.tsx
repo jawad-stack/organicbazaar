@@ -43,7 +43,8 @@ export function ReviewsList({ productId }: ReviewsListProps) {
 
   const fetchReviews = async () => {
     try {
-      setLoading(true)
+      setLoading(true);
+      
       const response = await fetch(
         `/api/reviews?productId=${productId}&sortBy=${sortBy}&limit=${itemsPerPage}&skip=${page * itemsPerPage}`
       )

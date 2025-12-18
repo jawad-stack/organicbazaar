@@ -23,7 +23,7 @@ export default function FAQPage() {
       id: "shipping",
       question: "How long does shipping take?",
       answer:
-        "Standard shipping takes 5-7 business days. Express shipping is 2-3 business days, and overnight delivery is available for orders placed before 2pm EST. Free shipping applies to orders over $50.",
+        "Standard shipping takes 5-7 business days. Express shipping is 2-3 business days, and overnight delivery is available for orders placed before 2pm EST. Free shipping applies to orders over Rs.1500.",
     },
     {
       id: "returns",
@@ -71,7 +71,7 @@ export default function FAQPage() {
       id: "bulk",
       question: "Do you offer bulk orders or wholesale?",
       answer:
-        "Yes, we offer special pricing for bulk and wholesale orders. Please get in touch with our wholesale team at jawadiqbal962@gmail.com for more information.",
+        "Yes, we offer special pricing for bulk and wholesale orders. Please contact our wholesale team at wholesale@organicbazaar.online for more information.",
     },
   ]
 
@@ -119,4 +119,3 @@ export default function FAQPage() {
     </main>
   )
 }
-

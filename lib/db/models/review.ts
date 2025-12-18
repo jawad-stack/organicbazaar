@@ -1,26 +1,26 @@
-import mongoose from "mongoose"
+import mongoose from "mongoose";
 
 export interface IReview {
-  _id: string
-  productId: string
-  customerName: string
-  customerEmail: string
-  rating: number // 1-5
-  title: string
-  content: string
-  helpful: number
-  notHelpful: number
-  verified: boolean
-  createdAt: Date
-  updatedAt: Date
+  _id: string;
+  productId: string;
+  customerName: string;
+  customerEmail: string;
+  rating: number; // 1-5
+  title: string;
+  content: string;
+  helpful: number;
+  notHelpful: number;
+  verified: boolean;
+  createdAt: Date;
+  updatedAt: Date;
 }
 
 const reviewSchema = new mongoose.Schema(
   {
     productId: {
-      type: String,
+      type: mongoose.Schema.Types.ObjectId,
       required: true,
-      index: true,
+      ref: "Product",
     },
     customerName: {
       type: String,
@@ -64,6 +64,7 @@ const reviewSchema = new mongoose.Schema(
     },
   },
   { timestamps: true }
-)
+);
 
-export const Review = mongoose.models.Review || mongoose.model("Review", reviewSchema)
+export const Review =
+  mongoose.models.Review || mongoose.model("Review", reviewSchema);
