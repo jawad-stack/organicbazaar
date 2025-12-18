@@ -4,6 +4,7 @@ import { Geist, Geist_Mono } from "next/font/google"
 import { Analytics } from "@vercel/analytics/next"
 import { CartIcon } from "@/components/cart-icon"
 import Link from "next/link"
+import { MobileNav } from "@/components/mobile-nav"
 import "./globals.css"
 
 const _geist = Geist({ subsets: ["latin"] })
@@ -14,7 +15,14 @@ export const metadata: Metadata = {
   description:
     "Shop premium 100% organic, sustainably sourced products at Organic Bazaar. From wellness to beauty, discover high-quality organic items for a healthier, sustainable lifestyle.",
   generator: "v0.app",
-  keywords: ["organic products", "sustainable shopping", "eco-friendly", "natural products", "organic bazaar", "buy organic online"],
+  keywords: [
+    "organic products",
+    "sustainable shopping",
+    "eco-friendly",
+    "natural products",
+    "organic bazaar",
+    "buy organic online",
+  ],
   authors: [{ name: "Organic Bazaar" }],
   openGraph: {
     title: "Organic Bazaar - 100% Organic Products Online Store",
@@ -74,13 +82,13 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <head>
-        <meta name="theme-color" content="#86d081" />
+        <meta name="theme-color" content="#6b9a7a" />
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
       </head>
       <body className={`font-sans antialiased`} suppressHydrationWarning>
         <header className="sticky top-0 z-50 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/75 border-b border-border/50">
-          <nav className="max-w-7xl mx-auto px-4 h-16 flex items-center justify-between">
+          <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
             {/* Brand */}
             <Link
               href="/"
@@ -89,8 +97,8 @@ export default function RootLayout({
               Organic Bazaar
             </Link>
 
-            {/* Navigation Links */}
-            <div className="hidden sm:flex items-center gap-8">
+            {/* Desktop Navigation Links */}
+            <div className="hidden md:flex items-center gap-8">
               <Link
                 href="/products"
                 className="text-sm font-medium text-foreground/70 hover:text-foreground transition-colors duration-200"
@@ -102,6 +110,12 @@ export default function RootLayout({
                 className="text-sm font-medium text-foreground/70 hover:text-foreground transition-colors duration-200"
               >
                 About
+              </Link>
+              <Link
+                href="/blog"
+                className="text-sm font-medium text-foreground/70 hover:text-foreground transition-colors duration-200"
+              >
+                Blog
               </Link>
               <Link
                 href="/faq"
@@ -117,15 +131,19 @@ export default function RootLayout({
               </Link>
             </div>
 
-            {/* Cart Icon */}
-            <CartIcon />
+            {/* Right Side: Mobile Menu + Cart */}
+            <div className="flex items-center gap-2">
+              <CartIcon />
+              <MobileNav />
+            </div>
           </nav>
         </header>
 
         {children}
 
+        {/* Existing footer code */}
         <footer className="bg-muted/30 border-t border-border/50 mt-24">
-          <div className="max-w-7xl mx-auto px-4 py-16">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
             <div className="grid grid-cols-1 md:grid-cols-4 gap-12 mb-12">
               <div>
                 <h3 className="font-semibold text-foreground mb-4">About</h3>
@@ -162,7 +180,10 @@ export default function RootLayout({
                     </Link>
                   </li>
                   <li>
-                    <Link href="/shipping-returns" className="text-muted-foreground hover:text-primary transition-colors">
+                    <Link
+                      href="/shipping-returns"
+                      className="text-muted-foreground hover:text-primary transition-colors"
+                    >
                       Shipping & Returns
                     </Link>
                   </li>
@@ -234,8 +255,23 @@ export default function RootLayout({
                     aria-label="Instagram"
                   >
                     <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
-                      <rect x="2" y="2" width="20" height="20" rx="5" ry="5" fill="none" stroke="currentColor" strokeWidth="2" />
-                      <path d="M16 11.37A4 4 0 1112.63 8 4 4 0 0116 11.37z" fill="none" stroke="currentColor" strokeWidth="2" />
+                      <rect
+                        x="2"
+                        y="2"
+                        width="20"
+                        height="20"
+                        rx="5"
+                        ry="5"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="2"
+                      />
+                      <path
+                        d="M16 11.37A4 4 0 1112.63 8 4 4 0 0116 11.37z"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="2"
+                      />
                       <circle cx="17.5" cy="6.5" r="1.5" fill="currentColor" />
                     </svg>
                   </Link>
