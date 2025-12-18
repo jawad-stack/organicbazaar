@@ -11,6 +11,7 @@ import { Label } from "@/components/ui/label"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { ArrowLeft, Save, Plus, Trash2 } from "lucide-react"
 import Link from "next/link"
+import { AIContentGenerator } from "@/components/ai-content-generator"
 
 export default function EditProductPage() {
   const router = useRouter()
@@ -96,6 +97,15 @@ export default function EditProductPage() {
     setFormData({ ...formData, variants: newVariants })
   }
 
+  // CHANGE: Handle AI-generated content
+  const handleAIContent = (content: any) => {
+    setFormData({
+      ...formData,
+      description: content.description || formData.description,
+      category: content.category || formData.category,
+    })
+  }
+
   if (loading) {
     return <div className="text-center py-12">Loading...</div>
   }
@@ -114,7 +124,11 @@ export default function EditProductPage() {
       <form onSubmit={handleSubmit} className="space-y-6 bg-card border border-border/50 rounded-lg p-6">
         {/* Basic Info */}
         <div className="space-y-4">
-          <h2 className="font-semibold text-lg text-foreground">Basic Information</h2>
+          <div className="flex items-center justify-between">
+            <h2 className="font-semibold text-lg text-foreground">Basic Information</h2>
+            {/* CHANGE: Add AI content generator button */}
+            <AIContentGenerator type="product" onContentGenerated={handleAIContent} />
+          </div>
 
           <div className="grid grid-cols-2 gap-4">
             <div className="space-y-2">

@@ -162,8 +162,13 @@ export default function ProductsAdminPage() {
                 </tr>
               ) : (
                 products.map((product) => {
-                  const minPrice = Math.min(...product.variants.map((v) => v.price))
-                  const maxPrice = Math.max(...product.variants.map((v) => v.price))
+                  const priceVariants = product.variants?.filter((v: any) => v && typeof v.price === "number") || []
+                  if (priceVariants.length === 0) {
+                    return null // Skip products with no valid variants
+                  }
+
+                  const minPrice = Math.min(...priceVariants.map((v) => v.price))
+                  const maxPrice = Math.max(...priceVariants.map((v) => v.price))
 
                   return (
                     <tr key={product._id} className="hover:bg-muted/30 transition-colors">

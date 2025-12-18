@@ -3,104 +3,97 @@
 
 @custom-variant dark (&:is(.dark *));
 
-/* Modern organic e-commerce color system: warm creams, forest green primary, terracotta accents, earthy tones */
+/* CHANGE: Adjusted color system for better visual hierarchy and premium feel */
 :root {
   /* Base - Warm Cream Background */
-  --background: oklch(97% 0.008 90); /* Warm cream base */
-  --foreground: oklch(22% 0.02 70); /* Deep charcoal brown */
-  --card: oklch(100% 0 0); /* Pure white cards */
-  --card-foreground: oklch(22% 0.02 70);
+  --background: oklch(97.5% 0.006 90);
+  --foreground: oklch(20% 0.025 75);
+  --card: oklch(99.5% 0.001 90);
+  --card-foreground: oklch(20% 0.025 75);
 
   /* Primary Brand - Forest Green */
-  --primary: oklch(42% 0.12 140); /* Rich forest green */
-  --primary-foreground: oklch(100% 0 0); /* White text on green */
+  --primary: oklch(43% 0.13 140);
+  --primary-foreground: oklch(99% 0 0);
 
-  /* Secondary - Warm Brown */
-  --secondary: oklch(58% 0.08 65); /* Warm terracotta-brown */
-  --secondary-foreground: oklch(100% 0 0);
-
-  /* Muted & Accent - Earthy Tones */
-  --muted: oklch(88% 0.015 85); /* Light warm neutral */
-  --muted-foreground: oklch(50% 0.05 70);
-  --accent: oklch(72% 0.18 40); /* Warm terracotta - CTA color */
-  --accent-foreground: oklch(100% 0 0);
-
-  /* Destructive */
-  --destructive: oklch(58% 0.22 30); /* Earthy red */
-  --destructive-foreground: oklch(100% 0 0);
-
-  /* Borders & Inputs */
-  --border: oklch(85% 0.01 85); /* Soft border color */
-  --input: oklch(96% 0.006 90); /* Very light input */
-  --ring: oklch(42% 0.12 140); /* Green focus ring */
-
-  /* Charts - Coordinated earthy palette */
-  --chart-1: oklch(72% 0.18 40); /* Terracotta */
-  --chart-2: oklch(42% 0.12 140); /* Forest Green */
-  --chart-3: oklch(58% 0.08 65); /* Warm Brown */
-  --chart-4: oklch(68% 0.14 110); /* Sage */
-  --chart-5: oklch(78% 0.12 85); /* Peachy tan */
-
-  /* Radius */
-  --radius: 0.625rem;
-
-  /* Sidebar */
-  --sidebar: oklch(95% 0.01 90);
-  --sidebar-foreground: oklch(22% 0.02 70);
-  --sidebar-primary: oklch(42% 0.12 140);
-  --sidebar-primary-foreground: oklch(100% 0 0);
-  --sidebar-accent: oklch(88% 0.015 85);
-  --sidebar-accent-foreground: oklch(42% 0.12 140);
-  --sidebar-border: oklch(85% 0.01 85);
-  --sidebar-ring: oklch(42% 0.12 140);
-}
-
-/* Dark mode - deep organic night with green and terracotta accents */
-.dark {
-  --background: oklch(14% 0.015 80); /* Deep warm charcoal */
-  --foreground: oklch(94% 0.008 90); /* Soft warm white */
-  --card: oklch(20% 0.02 75); /* Dark warm brown card */
-  --card-foreground: oklch(94% 0.008 90);
-
-  /* Primary - Muted forest green for dark mode */
-  --primary: oklch(68% 0.1 140); /* Softer green on dark */
-  --primary-foreground: oklch(14% 0.015 80);
-
-  /* Secondary */
-  --secondary: oklch(35% 0.08 65); /* Deep terracotta-brown */
-  --secondary-foreground: oklch(94% 0.008 90);
+  /* Secondary - Earthy Terracotta */
+  --secondary: oklch(60% 0.09 60);
+  --secondary-foreground: oklch(99% 0 0);
 
   /* Muted & Accent */
-  --muted: oklch(28% 0.02 75); /* Dark muted brown */
-  --muted-foreground: oklch(72% 0.06 85);
-  --accent: oklch(68% 0.14 40); /* Muted terracotta */
-  --accent-foreground: oklch(14% 0.015 80);
+  --muted: oklch(89% 0.012 85);
+  --muted-foreground: oklch(48% 0.06 75);
+  --accent: oklch(70% 0.2 42);
+  --accent-foreground: oklch(99% 0 0);
 
   /* Destructive */
-  --destructive: oklch(55% 0.18 30);
-  --destructive-foreground: oklch(94% 0.008 90);
+  --destructive: oklch(58% 0.22 28);
+  --destructive-foreground: oklch(99% 0 0);
 
   /* Borders & Inputs */
-  --border: oklch(28% 0.02 75);
-  --input: oklch(24% 0.02 75);
-  --ring: oklch(68% 0.1 140);
+  --border: oklch(88% 0.008 85);
+  --input: oklch(96% 0.004 90);
+  --ring: oklch(43% 0.13 140);
 
-  /* Charts */
-  --chart-1: oklch(68% 0.14 40);
-  --chart-2: oklch(68% 0.1 140);
-  --chart-3: oklch(55% 0.08 65);
-  --chart-4: oklch(65% 0.11 110);
-  --chart-5: oklch(72% 0.1 85);
+  /* Chart Colors */
+  --chart-1: oklch(70% 0.2 42);
+  --chart-2: oklch(43% 0.13 140);
+  --chart-3: oklch(60% 0.09 60);
+  --chart-4: oklch(65% 0.12 110);
+  --chart-5: oklch(76% 0.11 85);
+
+  /* Radius - Slightly smaller for modern feel */
+  --radius: 0.5rem;
 
   /* Sidebar */
-  --sidebar: oklch(22% 0.02 75);
-  --sidebar-foreground: oklch(94% 0.008 90);
-  --sidebar-primary: oklch(68% 0.1 140);
-  --sidebar-primary-foreground: oklch(14% 0.015 80);
-  --sidebar-accent: oklch(28% 0.02 75);
-  --sidebar-accent-foreground: oklch(68% 0.1 140);
-  --sidebar-border: oklch(28% 0.02 75);
-  --sidebar-ring: oklch(68% 0.1 140);
+  --sidebar: oklch(95% 0.008 90);
+  --sidebar-foreground: oklch(20% 0.025 75);
+  --sidebar-primary: oklch(43% 0.13 140);
+  --sidebar-primary-foreground: oklch(99% 0 0);
+  --sidebar-accent: oklch(89% 0.012 85);
+  --sidebar-accent-foreground: oklch(43% 0.13 140);
+  --sidebar-border: oklch(88% 0.008 85);
+  --sidebar-ring: oklch(43% 0.13 140);
+}
+
+/* Dark mode adjustments */
+.dark {
+  --background: oklch(13% 0.012 80);
+  --foreground: oklch(95% 0.006 90);
+  --card: oklch(18% 0.015 75);
+  --card-foreground: oklch(95% 0.006 90);
+
+  --primary: oklch(68% 0.11 140);
+  --primary-foreground: oklch(13% 0.012 80);
+
+  --secondary: oklch(55% 0.08 60);
+  --secondary-foreground: oklch(95% 0.006 90);
+
+  --muted: oklch(32% 0.018 75);
+  --muted-foreground: oklch(70% 0.08 85);
+  --accent: oklch(68% 0.15 42);
+  --accent-foreground: oklch(13% 0.012 80);
+
+  --destructive: oklch(55% 0.18 28);
+  --destructive-foreground: oklch(95% 0.006 90);
+
+  --border: oklch(28% 0.015 75);
+  --input: oklch(22% 0.012 75);
+  --ring: oklch(68% 0.11 140);
+
+  --chart-1: oklch(68% 0.15 42);
+  --chart-2: oklch(68% 0.11 140);
+  --chart-3: oklch(55% 0.08 60);
+  --chart-4: oklch(63% 0.1 110);
+  --chart-5: oklch(70% 0.09 85);
+
+  --sidebar: oklch(20% 0.015 75);
+  --sidebar-foreground: oklch(95% 0.006 90);
+  --sidebar-primary: oklch(68% 0.11 140);
+  --sidebar-primary-foreground: oklch(13% 0.012 80);
+  --sidebar-accent: oklch(32% 0.018 75);
+  --sidebar-accent-foreground: oklch(68% 0.11 140);
+  --sidebar-border: oklch(28% 0.015 75);
+  --sidebar-ring: oklch(68% 0.11 140);
 }
 
 @theme inline {
@@ -110,8 +103,6 @@
   --color-foreground: var(--foreground);
   --color-card: var(--card);
   --color-card-foreground: var(--card-foreground);
-  --color-popover: var(--popover);
-  --color-popover-foreground: var(--popover-foreground);
   --color-primary: var(--primary);
   --color-primary-foreground: var(--primary-foreground);
   --color-secondary: var(--secondary);
@@ -130,10 +121,10 @@
   --color-chart-3: var(--chart-3);
   --color-chart-4: var(--chart-4);
   --color-chart-5: var(--chart-5);
-  --radius-sm: calc(var(--radius) - 4px);
-  --radius-md: calc(var(--radius) - 2px);
+  --radius-sm: calc(var(--radius) - 2px);
+  --radius-md: calc(var(--radius) - 1px);
   --radius-lg: var(--radius);
-  --radius-xl: calc(var(--radius) + 4px);
+  --radius-xl: calc(var(--radius) + 2px);
   --color-sidebar: var(--sidebar);
   --color-sidebar-foreground: var(--sidebar-foreground);
   --color-sidebar-primary: var(--sidebar-primary);
@@ -153,18 +144,18 @@
   }
 }
 
-/* Add smooth transitions and reduced motion support */
+/* Smooth transitions with reduced motion support */
 @media (prefers-reduced-motion: no-preference) {
   * {
-    @apply transition-colors duration-200;
+    @apply transition-colors duration-150;
   }
 }
 
-/* Smooth page transitions */
+/* Animations - optimized for premium feel */
 @keyframes fadeIn {
   from {
     opacity: 0;
-    transform: translateY(4px);
+    transform: translateY(2px);
   }
   to {
     opacity: 1;
@@ -175,7 +166,7 @@
 @keyframes slideInUp {
   from {
     opacity: 0;
-    transform: translateY(8px);
+    transform: translateY(4px);
   }
   to {
     opacity: 1;
@@ -186,7 +177,7 @@
 @keyframes scaleIn {
   from {
     opacity: 0;
-    transform: scale(0.98);
+    transform: scale(0.99);
   }
   to {
     opacity: 1;
@@ -194,7 +185,6 @@
   }
 }
 
-/* Added gradient hero animation for premium feel */
 @keyframes gradientFlow {
   0%,
   100% {
@@ -206,15 +196,15 @@
 }
 
 .animate-fade-in {
-  animation: fadeIn 0.4s ease-out;
+  animation: fadeIn 0.3s ease-out;
 }
 
 .animate-slide-up {
-  animation: slideInUp 0.5s ease-out;
+  animation: slideInUp 0.4s ease-out;
 }
 
 .animate-scale-in {
-  animation: scaleIn 0.3s ease-out;
+  animation: scaleIn 0.25s ease-out;
 }
 
 .animate-gradient-flow {
@@ -222,13 +212,13 @@
   animation: gradientFlow 6s ease infinite;
 }
 
-/* Smooth hover and focus states */
+/* Optimized hover and focus states */
 @media (prefers-reduced-motion: no-preference) {
   button {
-    @apply transition-all duration-200 ease-out;
+    @apply transition-all duration-150 ease-out;
   }
 
   a {
-    @apply transition-colors duration-200 ease-out;
+    @apply transition-colors duration-150 ease-out;
   }
 }
