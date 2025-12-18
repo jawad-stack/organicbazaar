@@ -7,7 +7,7 @@ import Link from "next/link"
 
 export default function CartPage() {
   const { items, removeItem, updateQuantity, getTotal } = useCart()
-
+console.log("Cart Items:", items);
   const total = getTotal()
 
   if (items.length === 0) {
@@ -55,7 +55,7 @@ export default function CartPage() {
                     <h3 className="font-semibold">{item.productName}</h3>
                     <p className="text-sm text-muted-foreground">{item.variantName}</p>
                     <p className="text-sm text-muted-foreground">SKU: {item.sku}</p>
-                    <p className="mt-2 font-semibold">${item.price.toFixed(2)}</p>
+                    <p className="mt-2 font-semibold">Rs.{item.price.toFixed(2)}</p>
                   </div>
 
                   <div className="flex items-center gap-2">
@@ -77,7 +77,7 @@ export default function CartPage() {
                   </div>
 
                   <div className="text-right">
-                    <p className="font-semibold">${(item.price * item.quantity).toFixed(2)}</p>
+                    <p className="font-semibold">Rs.{(item.price * item.quantity).toFixed(2)}</p>
                     <Button
                       variant="ghost"
                       size="sm"
@@ -100,7 +100,7 @@ export default function CartPage() {
               <div className="space-y-2 mb-6 pb-6 border-b">
                 <div className="flex justify-between">
                   <span>Subtotal</span>
-                  <span>${total.toFixed(2)}</span>
+                  <span>Rs.{total.toFixed(2)}</span>
                 </div>
                 <div className="flex justify-between text-sm text-muted-foreground">
                   <span>Shipping</span>
@@ -108,7 +108,7 @@ export default function CartPage() {
                 </div>
                 <div className="flex justify-between text-lg font-bold pt-4">
                   <span>Subtotal</span>
-                  <span>${total.toFixed(2)}</span>
+                  <span>Rs.{total.toFixed(2)}</span>
                 </div>
               </div>
 
@@ -123,7 +123,7 @@ export default function CartPage() {
 
               <div className="mt-6 pt-6 border-t space-y-2 text-sm text-muted-foreground">
                 <p>✓ Secure checkout</p>
-                <p>✓ Free shipping on orders over $50</p>
+                <p>✓ Free shipping on orders over Rs.1500</p>
                 <p>✓ Money-back guarantee</p>
               </div>
             </Card>

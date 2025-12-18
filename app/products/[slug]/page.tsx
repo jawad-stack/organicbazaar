@@ -37,13 +37,23 @@ export async function generateMetadata({
         title: product.seoTitle || product.name,
         description: product.seoDescription || product.description,
         type: "website",
-        images: product.images?.length > 0 ? [{ url: product.images[0] }] : [],
+        images:
+          product.images?.length > 0
+            ? [
+                product.images?.map((item: any) => {
+                  url: item.url;
+                }),
+              ]
+            : [],
       },
       twitter: {
         card: "summary_large_image",
         title: product.seoTitle || product.name,
         description: product.seoDescription || product.description,
-        images: product.images?.length > 0 ? [product.images[0]] : [],
+        images:
+          product.images?.length > 0
+            ? product.images?.map((item: any) => item.url)
+            : [],
       },
     };
   } catch (error) {
@@ -90,7 +100,9 @@ export default async function ProductPage({ params }: PageProps) {
     }
 
     const imageUrl =
-      product.images?.[0] || "/placeholder.svg?height=600&width=600";
+      product.images?.[0]?.url ||
+      product.images?.[0] ||
+      "/placeholder.svg?height=600&width=600";
 
     return (
       <main className="min-h-screen bg-background">
@@ -129,7 +141,7 @@ export default async function ProductPage({ params }: PageProps) {
                       className="relative w-20 h-20 bg-muted rounded cursor-pointer"
                     >
                       <Image
-                        src={img || "/placeholder.svg"}
+                        src={img?.url || img || "/placeholder.svg"}
                         alt={`${product.name} view ${i + 2}`}
                         fill
                         className="object-cover"
@@ -183,7 +195,7 @@ export default async function ProductPage({ params }: PageProps) {
               <div className="space-y-3 pt-4 border-t text-sm text-muted-foreground">
                 <p>✓ 100% Organic</p>
                 <p>✓ Sustainably Sourced</p>
-                <p>✓ Free Shipping on Orders Over $50</p>
+                <p>✓ Free Shipping on Orders Over Rs.1500</p>
               </div>
             </div>
           </div>

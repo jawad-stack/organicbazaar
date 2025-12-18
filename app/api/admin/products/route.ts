@@ -5,8 +5,8 @@ import { Product } from "@/lib/db/models/product"
 export async function GET() {
   try {
     await connectDB()
-    const products = await Product.find({}).select("slug name").lean()
-    const serialized = products.map((p: any) => ({ slug: p.slug, name: p.name }))
+    const products = await Product.find({}).select("slug name images").lean()
+    const serialized = products.map((p: any) => (p))
     return NextResponse.json({ products: serialized })
   } catch (error) {
     console.error("Error fetching admin products:", error)
