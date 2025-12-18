@@ -18,6 +18,7 @@ export default function NewBlogPostPage() {
   const router = useRouter()
   const [loading, setLoading] = useState(false)
   const [aiLoading, setAiLoading] = useState(false)
+  const [aiError, setAiError] = useState("")
   const [formData, setFormData] = useState({
     title: "",
     excerpt: "",
@@ -37,6 +38,8 @@ export default function NewBlogPostPage() {
     }
 
     setAiLoading(true)
+    setAiError("")
+
     try {
       const response = await fetch("/api/ai/generate-blog-content", {
         method: "POST",
@@ -47,8 +50,9 @@ export default function NewBlogPostPage() {
         }),
       })
 
-      if (response.ok) {
-        const data = await response.json()
+      const data = await response.json()
+
+      if (response.ok && data.success) {
         setFormData((prev) => ({
           ...prev,
           excerpt: data.excerpt || prev.excerpt,
@@ -56,9 +60,15 @@ export default function NewBlogPostPage() {
           seoDescription: data.seoDescription || prev.seoDescription,
           seoKeywords: (Array.isArray(data.keywords) ? data.keywords : []).join(", "),
         }))
+        alert("Content generated successfully!")
+      } else {
+        setAiError(data.error || "Failed to generate content")
+        alert(`AI Generation Error: ${data.error || "Unknown error"}`)
       }
     } catch (error) {
       console.error("[v0] Error generating content:", error)
+      setAiError("Network error. Please try again.")
+      alert("Network error. Please check your connection and try again.")
     } finally {
       setAiLoading(false)
     }
@@ -115,7 +125,7 @@ export default function NewBlogPostPage() {
           />
         </div>
 
-        <div className="flex gap-2">
+        <div className="flex gap-2 items-center">
           <Button
             type="button"
             variant="outline"
@@ -126,6 +136,7 @@ export default function NewBlogPostPage() {
             <Zap className="w-4 h-4 mr-2" />
             {aiLoading ? "Generating..." : "AI Generate"}
           </Button>
+          {aiError && <p className="text-sm text-destructive">{aiError}</p>}
         </div>
 
         <div className="space-y-2">

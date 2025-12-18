@@ -2,11 +2,13 @@ import { connectDB } from "@/lib/db/connection"
 import { BlogPost } from "@/lib/db/models/blog"
 import { type NextRequest, NextResponse } from "next/server"
 
-export async function GET(request: NextRequest, { params }: { params: { id: string } }) {
+export async function GET(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
     await connectDB()
 
-    const post = await BlogPost.findById(params.id)
+    const { id } = await params
+
+    const post = await BlogPost.findById(id)
 
     if (!post) {
       return NextResponse.json({ error: "Post not found" }, { status: 404 })
@@ -16,19 +18,20 @@ export async function GET(request: NextRequest, { params }: { params: { id: stri
       post: { ...post.toObject(), _id: String(post._id) },
     })
   } catch (error) {
-    console.error("Error fetching blog post:", error)
+    console.error("[v0] Error fetching blog post:", error)
     return NextResponse.json({ error: "Failed to fetch post" }, { status: 500 })
   }
 }
 
-export async function PUT(request: NextRequest, { params }: { params: { id: string } }) {
+export async function PUT(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
     await connectDB()
 
+    const { id } = await params
     const body = await request.json()
 
     const post = await BlogPost.findByIdAndUpdate(
-      params.id,
+      id,
       {
         title: body.title,
         slug: body.slug,
@@ -54,7 +57,7 @@ export async function PUT(request: NextRequest, { params }: { params: { id: stri
       post: { ...post.toObject(), _id: String(post._id) },
     })
   } catch (error: any) {
-    console.error("Error updating blog post:", error)
+    console.error("[v0] Error updating blog post:", error)
     return NextResponse.json(
       {
         error: error.message || "Failed to update post",
@@ -64,11 +67,13 @@ export async function PUT(request: NextRequest, { params }: { params: { id: stri
   }
 }
 
-export async function DELETE(request: NextRequest, { params }: { params: { id: string } }) {
+export async function DELETE(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
     await connectDB()
 
-    const post = await BlogPost.findByIdAndDelete(params.id)
+    const { id } = await params
+
+    const post = await BlogPost.findByIdAndDelete(id)
 
     if (!post) {
       return NextResponse.json({ error: "Post not found" }, { status: 404 })
@@ -76,7 +81,7 @@ export async function DELETE(request: NextRequest, { params }: { params: { id: s
 
     return NextResponse.json({ message: "Post deleted successfully" })
   } catch (error) {
-    console.error("Error deleting blog post:", error)
+    console.error("[v0] Error deleting blog post:", error)
     return NextResponse.json({ error: "Failed to delete post" }, { status: 500 })
   }
 }

@@ -84,11 +84,18 @@ export default function BlogAdminPage() {
   const handleDelete = async (id: string) => {
     try {
       const response = await fetch(`/api/admin/blog/${id}`, { method: "DELETE" })
+      const data = await response.json()
+
       if (response.ok) {
         setPosts(posts.filter((p) => p._id !== id))
+        alert("Post deleted successfully!")
+        fetchPosts()
+      } else {
+        alert(`Failed to delete: ${data.error || "Unknown error"}`)
       }
     } catch (error) {
       console.error("[v0] Error deleting post:", error)
+      alert("Network error. Please try again.")
     }
   }
 

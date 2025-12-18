@@ -17,6 +17,7 @@ export default function NewProductPage() {
   const router = useRouter()
   const [loading, setLoading] = useState(false)
   const [aiLoading, setAiLoading] = useState(false)
+  const [aiError, setAiError] = useState("")
   const [formData, setFormData] = useState({
     name: "",
     slug: "",
@@ -33,6 +34,8 @@ export default function NewProductPage() {
     }
 
     setAiLoading(true)
+    setAiError("")
+
     try {
       const response = await fetch("/api/ai/generate-product-content", {
         method: "POST",
@@ -43,16 +46,28 @@ export default function NewProductPage() {
         }),
       })
 
-      if (response.ok) {
-        const data = await response.json()
+      const data = await response.json()
+
+      if (response.ok && data.success) {
         setFormData((prev) => ({
           ...prev,
-          description: data.content?.description || prev.description,
-          categories: data.content?.keywords || prev.categories,
+          description: data.description || prev.description,
         }))
+        if (data.keywords && data.keywords.length > 0) {
+          setFormData((prev) => ({
+            ...prev,
+            categories: data.keywords.slice(0, 3),
+          }))
+        }
+        alert("Content generated successfully!")
+      } else {
+        setAiError(data.error || "Failed to generate content")
+        alert(`AI Generation Error: ${data.error || "Unknown error"}`)
       }
     } catch (error) {
       console.error("[v0] Error generating content:", error)
+      setAiError("Network error. Please try again.")
+      alert("Network error. Please check your connection and try again.")
     } finally {
       setAiLoading(false)
     }
@@ -133,7 +148,7 @@ export default function NewProductPage() {
           />
         </div>
 
-        <div className="flex gap-2">
+        <div className="flex gap-2 items-center">
           <Button
             type="button"
             variant="outline"
@@ -144,6 +159,7 @@ export default function NewProductPage() {
             <Zap className="w-4 h-4 mr-2" />
             {aiLoading ? "Generating..." : "AI Generate"}
           </Button>
+          {aiError && <p className="text-sm text-destructive">{aiError}</p>}
         </div>
 
         {/* Description */}

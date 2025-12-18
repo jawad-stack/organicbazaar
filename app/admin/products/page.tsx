@@ -14,7 +14,7 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog"
-import { Plus, Edit2, Trash2, Eye, EyeOff } from "lucide-react"
+import { Plus, Edit2, Trash2, Eye, EyeOff, RefreshCw } from "lucide-react"
 
 interface Product {
   _id: string
@@ -23,13 +23,14 @@ interface Product {
   description: string
   status: "active" | "inactive"
   categories: string[]
-  variants: Array<{ price: number }>
+  variants: Array<{ price: number; name?: string; stock?: number }>
   images: any[]
 }
 
 export default function ProductsAdminPage() {
   const [products, setProducts] = useState<Product[]>([])
   const [loading, setLoading] = useState(true)
+  const [error, setError] = useState("")
   const [page, setPage] = useState(1)
   const [total, setTotal] = useState(0)
   const [status, setStatus] = useState("all")
@@ -43,6 +44,7 @@ export default function ProductsAdminPage() {
 
   const fetchProducts = async () => {
     setLoading(true)
+    setError("")
     try {
       const query = new URLSearchParams({
         page: page.toString(),
@@ -52,31 +54,49 @@ export default function ProductsAdminPage() {
       })
 
       const response = await fetch(`/api/admin/products?${query}`)
+
+      if (!response.ok) {
+        throw new Error("Failed to fetch products")
+      }
+
       const data = await response.json()
-      setProducts(data.products || [])
-      setTotal(data.total || 0)
+
+      setProducts(Array.isArray(data.products) ? data.products : [])
+      setTotal(typeof data.total === "number" ? data.total : 0)
     } catch (error) {
-      console.error("Error fetching products:", error)
+      console.error("[v0] Error fetching products:", error)
+      setError("Failed to load products. Please try again.")
+      setProducts([])
     } finally {
       setLoading(false)
     }
   }
 
-  const handleDelete = async (id: string) => {
+  const handleDelete = async (id: string, name: string) => {
     try {
       const response = await fetch(`/api/admin/products/${id}`, { method: "DELETE" })
+      const data = await response.json()
+
       if (response.ok) {
         setProducts(products.filter((p) => p._id !== id))
+        alert(`Product "${name}" deleted successfully!`)
+        fetchProducts()
+      } else {
+        alert(`Failed to delete: ${data.error || "Unknown error"}`)
       }
     } catch (error) {
-      console.error("Error deleting product:", error)
+      console.error("[v0] Error deleting product:", error)
+      alert("Network error. Please try again.")
     }
   }
 
   const toggleStatus = async (id: string, newStatus: "active" | "inactive") => {
     try {
       const product = products.find((p) => p._id === id)
-      if (!product) return
+      if (!product) {
+        alert("Product not found")
+        return
+      }
 
       const response = await fetch(`/api/admin/products/${id}`, {
         method: "PUT",
@@ -86,9 +106,14 @@ export default function ProductsAdminPage() {
 
       if (response.ok) {
         setProducts(products.map((p) => (p._id === id ? { ...p, status: newStatus } : p)))
+        alert(`Product status updated to ${newStatus}`)
+      } else {
+        const data = await response.json()
+        alert(`Failed to update status: ${data.error || "Unknown error"}`)
       }
     } catch (error) {
-      console.error("Error updating product:", error)
+      console.error("[v0] Error updating product:", error)
+      alert("Network error. Please try again.")
     }
   }
 
@@ -118,7 +143,7 @@ export default function ProductsAdminPage() {
               fetchProducts()
             }
           }}
-          className="flex-1"
+          className="flex-1 bg-card"
         />
         <select
           value={status}
@@ -126,71 +151,104 @@ export default function ProductsAdminPage() {
             setStatus(e.target.value)
             setPage(1)
           }}
-          className="px-4 py-2 rounded-lg border border-border/50 bg-background text-foreground"
+          className="px-4 py-2 rounded-lg border border-border/50 bg-card text-foreground min-w-40"
         >
           <option value="all">All Products</option>
           <option value="active">Active</option>
           <option value="inactive">Inactive</option>
         </select>
+        <Button variant="outline" size="sm" onClick={fetchProducts} disabled={loading} className="bg-transparent">
+          <RefreshCw className={`w-4 h-4 ${loading ? "animate-spin" : ""}`} />
+        </Button>
       </div>
 
+      {/* Error State */}
+      {error && !loading && (
+        <div className="bg-destructive/10 border border-destructive/50 rounded-lg p-4">
+          <p className="text-destructive text-sm">{error}</p>
+          <Button variant="outline" size="sm" onClick={fetchProducts} className="mt-2 bg-transparent">
+            Try Again
+          </Button>
+        </div>
+      )}
+
       {/* Products Table */}
-      <div className="border border-border/50 rounded-lg overflow-hidden">
+      <div className="border border-border/50 rounded-lg overflow-hidden bg-card">
         <div className="overflow-x-auto">
           <table className="w-full">
             <thead className="bg-muted/50 border-b border-border/50">
               <tr>
-                <th className="px-6 py-4 text-left text-sm font-semibold text-foreground">Product</th>
-                <th className="px-6 py-4 text-left text-sm font-semibold text-foreground">Price Range</th>
-                <th className="px-6 py-4 text-left text-sm font-semibold text-foreground">Images</th>
-                <th className="px-6 py-4 text-left text-sm font-semibold text-foreground">Status</th>
-                <th className="px-6 py-4 text-right text-sm font-semibold text-foreground">Actions</th>
+                <th className="px-4 sm:px-6 py-4 text-left text-sm font-semibold text-foreground">Product</th>
+                <th className="hidden sm:table-cell px-4 sm:px-6 py-4 text-left text-sm font-semibold text-foreground">
+                  Price Range
+                </th>
+                <th className="hidden md:table-cell px-4 sm:px-6 py-4 text-left text-sm font-semibold text-foreground">
+                  Images
+                </th>
+                <th className="px-4 sm:px-6 py-4 text-left text-sm font-semibold text-foreground">Status</th>
+                <th className="px-4 sm:px-6 py-4 text-right text-sm font-semibold text-foreground">Actions</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-border/50">
               {loading ? (
                 <tr>
-                  <td colSpan={5} className="px-6 py-8 text-center text-muted-foreground">
-                    Loading...
+                  <td colSpan={5} className="px-4 sm:px-6 py-12 text-center">
+                    <div className="flex flex-col items-center gap-3">
+                      <div className="w-8 h-8 border-4 border-primary border-t-transparent rounded-full animate-spin" />
+                      <p className="text-muted-foreground">Loading products...</p>
+                    </div>
                   </td>
                 </tr>
               ) : products.length === 0 ? (
                 <tr>
-                  <td colSpan={5} className="px-6 py-8 text-center text-muted-foreground">
-                    No products found
+                  <td colSpan={5} className="px-4 sm:px-6 py-12 text-center">
+                    <div className="space-y-3">
+                      <p className="text-muted-foreground">
+                        {search || status !== "all" ? "No products match your filters" : "No products yet"}
+                      </p>
+                      {!search && status === "all" && (
+                        <Button asChild variant="outline" size="sm" className="bg-transparent">
+                          <Link href="/admin/products/new">Create your first product</Link>
+                        </Button>
+                      )}
+                    </div>
                   </td>
                 </tr>
               ) : (
                 products.map((product) => {
-                  const priceVariants = product.variants?.filter((v: any) => v && typeof v.price === "number") || []
-                  if (priceVariants.length === 0) {
-                    return null // Skip products with no valid variants
-                  }
+                  const priceVariants =
+                    product.variants?.filter((v: any) => v && typeof v.price === "number" && v.price > 0) || []
 
-                  const minPrice = Math.min(...priceVariants.map((v) => v.price))
-                  const maxPrice = Math.max(...priceVariants.map((v) => v.price))
+                  const minPrice = priceVariants.length > 0 ? Math.min(...priceVariants.map((v) => v.price)) : 0
+                  const maxPrice = priceVariants.length > 0 ? Math.max(...priceVariants.map((v) => v.price)) : 0
 
                   return (
                     <tr key={product._id} className="hover:bg-muted/30 transition-colors">
-                      <td className="px-6 py-4">
+                      <td className="px-4 sm:px-6 py-4">
                         <div>
-                          <p className="font-medium text-foreground">{product.name}</p>
-                          <p className="text-xs text-muted-foreground">/{product.slug}</p>
+                          <p className="font-medium text-foreground line-clamp-1">{product.name || "Untitled"}</p>
+                          <p className="text-xs text-muted-foreground">/{product.slug || "no-slug"}</p>
                         </div>
                       </td>
-                      <td className="px-6 py-4 text-sm text-foreground">
-                        {minPrice === maxPrice
-                          ? `Rs.${minPrice.toFixed(2)}`
-                          : `Rs.${minPrice.toFixed(2)} - Rs.${maxPrice.toFixed(2)}`}
+                      <td className="hidden sm:table-cell px-4 sm:px-6 py-4 text-sm text-foreground">
+                        {priceVariants.length === 0 ? (
+                          <span className="text-muted-foreground">No price</span>
+                        ) : minPrice === maxPrice ? (
+                          `Rs.${minPrice.toFixed(2)}`
+                        ) : (
+                          `Rs.${minPrice.toFixed(2)} - Rs.${maxPrice.toFixed(2)}`
+                        )}
                       </td>
-                      <td className="px-6 py-4">
+                      <td className="hidden md:table-cell px-4 sm:px-6 py-4">
                         <span className="text-sm text-foreground">{product.images?.length || 0} images</span>
                       </td>
-                      <td className="px-6 py-4">
-                        <Badge variant={product.status === "active" ? "default" : "secondary"}>{product.status}</Badge>
+                      <td className="px-4 sm:px-6 py-4">
+                        <Badge variant={product.status === "active" ? "default" : "secondary"} className="text-xs">
+                          {product.status || "inactive"}
+                        </Badge>
                       </td>
-                      <td className="px-6 py-4">
-                        <div className="flex justify-end gap-2">
+                      <td className="px-4 sm:px-6 py-4">
+                        <div className="flex justify-end gap-1 sm:gap-2">
                           <Button
                             size="sm"
                             variant="ghost"
@@ -224,7 +282,7 @@ export default function ProductsAdminPage() {
                               <div className="flex gap-4 justify-end">
                                 <AlertDialogCancel>Cancel</AlertDialogCancel>
                                 <AlertDialogAction
-                                  onClick={() => handleDelete(product._id)}
+                                  onClick={() => handleDelete(product._id, product.name)}
                                   className="bg-destructive hover:bg-destructive/90"
                                 >
                                   Delete
@@ -244,8 +302,8 @@ export default function ProductsAdminPage() {
       </div>
 
       {/* Pagination */}
-      {pages > 1 && (
-        <div className="flex items-center justify-center gap-2">
+      {pages > 1 && !loading && (
+        <div className="flex items-center justify-center gap-2 overflow-x-auto pb-2">
           <Button
             variant="outline"
             size="sm"

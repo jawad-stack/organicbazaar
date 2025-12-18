@@ -71,8 +71,9 @@ export default function EditBlogPostPage() {
         }),
       })
 
-      if (response.ok) {
-        const data = await response.json()
+      const data = await response.json()
+
+      if (response.ok && data.success) {
         setFormData((prev) => ({
           ...prev,
           excerpt: data.excerpt || prev.excerpt,
@@ -80,9 +81,13 @@ export default function EditBlogPostPage() {
           seoDescription: data.seoDescription || prev.seoDescription,
           seoKeywords: (Array.isArray(data.keywords) ? data.keywords : []).join(", "),
         }))
+        alert("Content generated successfully!")
+      } else {
+        alert(`AI Error: ${data.error || "Failed to generate content"}`)
       }
     } catch (error) {
       console.error("[v0] Error generating content:", error)
+      alert("Network error. Please try again.")
     } finally {
       setAiLoading(false)
     }

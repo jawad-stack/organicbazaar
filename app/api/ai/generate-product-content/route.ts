@@ -30,7 +30,7 @@ Generate ONLY valid JSON (no markdown, no extra text) with this structure:
 Make all content conversion-focused, emphasize 100% organic/natural aspects, and include relevant keywords for SEO.`
 
     const response = await fetch(
-      "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent",
+      `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-exp:generateContent?key=${GEMINI_API_KEY}`,
       {
         method: "POST",
         headers: {
@@ -48,7 +48,7 @@ Make all content conversion-focused, emphasize 100% organic/natural aspects, and
           ],
           generationConfig: {
             temperature: 0.7,
-            maxOutputTokens: 500,
+            maxOutputTokens: 800,
           },
         }),
       },
@@ -56,33 +56,61 @@ Make all content conversion-focused, emphasize 100% organic/natural aspects, and
 
     if (!response.ok) {
       const error = await response.json()
-      console.error("Gemini API error:", error)
-      return NextResponse.json({ error: "Failed to generate content" }, { status: 500 })
+      console.error("[v0] Gemini API error:", error)
+      return NextResponse.json(
+        {
+          error: "Failed to generate content",
+          details: error?.error?.message || "Unknown error",
+        },
+        { status: 500 },
+      )
     }
 
     const data = await response.json()
     const content = data.candidates?.[0]?.content?.parts?.[0]?.text
 
     if (!content) {
+      console.error("[v0] No content in Gemini response:", data)
       return NextResponse.json({ error: "No content generated" }, { status: 500 })
     }
 
-    // Parse JSON response, handling potential markdown code blocks
-    let jsonContent = content
-    if (content.includes("```json")) {
-      jsonContent = content.split("```json")[1]?.split("```")[0] || content
-    } else if (content.includes("```")) {
-      jsonContent = content.split("```")[1]?.split("```")[0] || content
+    let jsonContent = content.trim()
+    if (jsonContent.includes("```json")) {
+      jsonContent = jsonContent.split("```json")[1]?.split("```")[0]?.trim() || jsonContent
+    } else if (jsonContent.includes("```")) {
+      jsonContent = jsonContent.split("```")[1]?.split("```")[0]?.trim() || jsonContent
     }
 
-    const generated = JSON.parse(jsonContent.trim())
+    let generated
+    try {
+      generated = JSON.parse(jsonContent)
+    } catch (parseError) {
+      console.error("[v0] JSON parse error:", parseError, "Content:", jsonContent)
+      return NextResponse.json(
+        {
+          error: "Failed to parse AI response",
+          details: "Invalid JSON format",
+        },
+        { status: 500 },
+      )
+    }
 
     return NextResponse.json({
       success: true,
-      content: generated,
+      description: generated.description || "",
+      seoDescription: generated.seoDescription || "",
+      keywords: generated.seoKeywords || [],
+      benefits: generated.benefits || [],
+      shortDescription: generated.shortDescription || "",
     })
   } catch (error) {
-    console.error("Content generation error:", error)
-    return NextResponse.json({ error: "Failed to generate content" }, { status: 500 })
+    console.error("[v0] Content generation error:", error)
+    return NextResponse.json(
+      {
+        error: "Failed to generate content",
+        details: error instanceof Error ? error.message : "Unknown error",
+      },
+      { status: 500 },
+    )
   }
 }
