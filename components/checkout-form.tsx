@@ -1,52 +1,58 @@
-"use client"
+"use client";
 
-import { useState } from "react"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { Textarea } from "@/components/ui/textarea"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { Card } from "@/components/ui/card"
-import { useCart } from "@/lib/cart-context"
+import { useState } from "react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Card } from "@/components/ui/card";
+import { useCart } from "@/lib/cart-context";
 
 interface CheckoutFormData {
   // Customer Info
-  firstName: string
-  lastName: string
-  email: string
-  phone: string
+  firstName: string;
+  lastName: string;
+  email: string;
+  phone: string;
 
   // Shipping Address
-  shippingStreet: string
-  shippingCity: string
-  shippingState: string
-  shippingPostalCode: string
-  shippingCountry: string
+  shippingStreet: string;
+  shippingCity: string;
+  shippingState: string;
+  shippingPostalCode: string;
+  shippingCountry: string;
 
   // Billing Address (optional)
-  sameAsBilling: boolean
-  billingStreet: string
-  billingCity: string
-  billingState: string
-  billingPostalCode: string
-  billingCountry: string
+  sameAsBilling: boolean;
+  billingStreet: string;
+  billingCity: string;
+  billingState: string;
+  billingPostalCode: string;
+  billingCountry: string;
 
   // Shipping Method
-  shippingMethod: "standard" | "express" | "overnight"
-  deliveryNotes: string
+  shippingMethod: "standard" | "express" | "overnight";
+  deliveryNotes: string;
 }
 
 const SHIPPING_COSTS = {
-  standard: 5.99,
-  express: 14.99,
-  overnight: 29.99,
-}
+  standard: 149.99,
+  express: 249.99,
+  overnight: 499.99,
+};
 
 export function CheckoutForm() {
-  const { items, getTotal, clearCart } = useCart()
-  const [loading, setLoading] = useState(false)
-  const [error, setError] = useState<string | null>(null)
-  const [success, setSuccess] = useState(false)
+  const { items, getTotal, clearCart } = useCart();
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [success, setSuccess] = useState(false);
 
   const [formData, setFormData] = useState<CheckoutFormData>({
     firstName: "",
@@ -66,29 +72,31 @@ export function CheckoutForm() {
     billingCountry: "United States",
     shippingMethod: "standard",
     deliveryNotes: "",
-  })
+  });
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    const { name, value } = e.target
-    setFormData((prev) => ({ ...prev, [name]: value }))
-  }
+  const handleInputChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
+  };
 
   const handleSelectChange = (name: string, value: string) => {
-    setFormData((prev) => ({ ...prev, [name]: value }))
-  }
+    setFormData((prev) => ({ ...prev, [name]: value }));
+  };
 
   const handleCheckboxChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setFormData((prev) => ({ ...prev, sameAsBilling: e.target.checked }))
-  }
+    setFormData((prev) => ({ ...prev, sameAsBilling: e.target.checked }));
+  };
 
-  const shippingCost = SHIPPING_COSTS[formData.shippingMethod]
-  const subtotal = getTotal()
-  const total = subtotal + shippingCost
+  const subtotal = getTotal();
+  const shippingCost = SHIPPING_COSTS[formData.shippingMethod];
+  const total = subtotal + (subtotal < 1500 || formData.shippingMethod !== "standard" ? shippingCost : 0);
 
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-    setError(null)
-    setLoading(true)
+    e.preventDefault();
+    setError(null);
+    setLoading(true);
 
     try {
       // Validate required fields
@@ -102,11 +110,11 @@ export function CheckoutForm() {
         !formData.shippingState ||
         !formData.shippingPostalCode
       ) {
-        throw new Error("Please fill in all required fields")
+        throw new Error("Please fill in all required fields");
       }
 
       if (items.length === 0) {
-        throw new Error("Your cart is empty")
+        throw new Error("Your cart is empty");
       }
 
       // Submit order
@@ -141,37 +149,41 @@ export function CheckoutForm() {
           shippingMethod: formData.shippingMethod,
           deliveryNotes: formData.deliveryNotes,
         }),
-      })
+      });
 
       if (!response.ok) {
-        const data = await response.json()
-        throw new Error(data.error || "Failed to create order")
+        const data = await response.json();
+        throw new Error(data.error || "Failed to create order");
       }
 
-      const { orderId } = await response.json()
+      const { orderId } = await response.json();
 
-      setSuccess(true)
-      clearCart()
+      setSuccess(true);
+      clearCart();
 
       // Redirect to order confirmation
       setTimeout(() => {
-        window.location.href = `/order-confirmation?orderId=${orderId}`
-      }, 1500)
+        window.location.href = `/order-confirmation?orderId=${orderId}`;
+      }, 1500);
     } catch (err: any) {
-      console.error("Checkout error:", err)
-      setError(err.message || "An error occurred during checkout")
+      console.error("Checkout error:", err);
+      setError(err.message || "An error occurred during checkout");
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-  }
+  };
 
   if (success) {
     return (
       <Card className="p-8 text-center">
-        <h2 className="text-2xl font-bold text-green-600 mb-4">✓ Order Submitted!</h2>
-        <p className="text-muted-foreground">Redirecting to order confirmation...</p>
+        <h2 className="text-2xl font-bold text-green-600 mb-4">
+          ✓ Order Submitted!
+        </h2>
+        <p className="text-muted-foreground">
+          Redirecting to order confirmation...
+        </p>
       </Card>
-    )
+    );
   }
 
   return (
@@ -367,29 +379,38 @@ export function CheckoutForm() {
         <h3 className="text-lg font-semibold mb-4">Shipping Method</h3>
         <div className="space-y-3">
           {Object.entries(SHIPPING_COSTS).map(([method, cost]) => (
-            <label key={method} className="flex items-center cursor-pointer p-3 border rounded hover:bg-muted">
+            <label
+              key={method}
+              className="flex items-center cursor-pointer p-3 border rounded hover:bg-muted"
+            >
               <input
                 type="radio"
                 name="shippingMethod"
                 value={method}
                 checked={formData.shippingMethod === method}
-                onChange={(e) => handleSelectChange("shippingMethod", e.target.value)}
+                onChange={(e) =>
+                  handleSelectChange("shippingMethod", e.target.value)
+                }
                 className="w-4 h-4"
               />
               <span className="ml-3 flex-1 capitalize">
                 {method === "standard"
                   ? "Standard (5-7 business days)"
                   : method === "express"
-                    ? "Express (2-3 business days)"
-                    : "Overnight Delivery"}
+                  ? "Express (2-3 business days)"
+                  : "Overnight Delivery"}
               </span>
-              <span className="font-semibold text-primary">${cost.toFixed(2)}</span>
+              <span className="font-semibold text-primary">
+                Rs.{cost.toFixed(2)}
+              </span>
             </label>
           ))}
         </div>
 
         <div className="mt-4">
-          <Label htmlFor="deliveryNotes">Delivery Instructions (Optional)</Label>
+          <Label htmlFor="deliveryNotes">
+            Delivery Instructions (Optional)
+          </Label>
           <Textarea
             id="deliveryNotes"
             name="deliveryNotes"
@@ -406,26 +427,34 @@ export function CheckoutForm() {
         <h3 className="text-lg font-semibold mb-4">Order Summary</h3>
         <div className="space-y-2 mb-4">
           {items.map((item) => (
-            <div key={`${item.productId}-${item.variantId}`} className="flex justify-between text-sm">
+            <div
+              key={`${item.productId}-${item.variantId}`}
+              className="flex justify-between text-sm"
+            >
               <span>
                 {item.productName} x {item.quantity}
               </span>
-              <span>${(item.price * item.quantity).toFixed(2)}</span>
+              <span>Rs.{(item.price * item.quantity).toFixed(2)}</span>
             </div>
           ))}
         </div>
         <div className="border-t pt-4 space-y-2">
           <div className="flex justify-between">
             <span>Subtotal:</span>
-            <span>${subtotal.toFixed(2)}</span>
+            <span>Rs.{subtotal.toFixed(2)}</span>
           </div>
           <div className="flex justify-between">
-            <span>Shipping ({formData.shippingMethod}):</span>
-            <span>${shippingCost.toFixed(2)}</span>
+            <span>
+              Shipping ({formData.shippingMethod}){" "}
+              {subtotal > 1500 && formData.shippingMethod === "standard" ? "FREE" : ""}
+            </span>
+            <span className={subtotal > 1500 && formData.shippingMethod === "standard" ? "line-through" : ""}>
+              Rs.{shippingCost.toFixed(2)}
+            </span>
           </div>
           <div className="flex justify-between text-lg font-bold border-t pt-2">
             <span>Total:</span>
-            <span>${total.toFixed(2)}</span>
+            <span>Rs.{total.toFixed(2)}</span>
           </div>
         </div>
       </Card>
@@ -440,5 +469,5 @@ export function CheckoutForm() {
         {loading ? "Processing Order..." : "Place Order"}
       </Button>
     </form>
-  )
+  );
 }
