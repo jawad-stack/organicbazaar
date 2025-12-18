@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState, useEffect, useCallback } from "react"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -14,7 +14,7 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog"
-import { Plus, Edit2, Trash2, Eye } from "lucide-react"
+import { Plus, Edit2, Trash2, Search } from "lucide-react"
 import { formatDistanceToNow } from "date-fns"
 
 interface BlogPost {
@@ -35,8 +35,33 @@ export default function BlogAdminPage() {
   const [total, setTotal] = useState(0)
   const [status, setStatus] = useState("all")
   const [search, setSearch] = useState("")
+  const [filteredPosts, setFilteredPosts] = useState<BlogPost[]>([])
 
   const limit = 10
+
+  const filterPosts = useCallback(() => {
+    let filtered = posts
+
+    if (status !== "all") {
+      filtered = filtered.filter((p) => p.status === status)
+    }
+
+    if (search.trim()) {
+      const searchLower = search.toLowerCase()
+      filtered = filtered.filter(
+        (p) =>
+          p.title.toLowerCase().includes(searchLower) ||
+          p.author.toLowerCase().includes(searchLower) ||
+          p.category.toLowerCase().includes(searchLower),
+      )
+    }
+
+    setFilteredPosts(filtered)
+  }, [posts, status, search])
+
+  useEffect(() => {
+    filterPosts()
+  }, [filterPosts])
 
   useEffect(() => {
     fetchPosts()
@@ -47,10 +72,10 @@ export default function BlogAdminPage() {
     try {
       const response = await fetch(`/api/admin/blog?page=${page}&limit=${limit}&status=${status}`)
       const data = await response.json()
-      setPosts(data.posts)
-      setTotal(data.total)
+      setPosts(data.posts || [])
+      setTotal(data.total || 0)
     } catch (error) {
-      console.error("Error fetching posts:", error)
+      console.error("[v0] Error fetching posts:", error)
     } finally {
       setLoading(false)
     }
@@ -63,7 +88,7 @@ export default function BlogAdminPage() {
         setPosts(posts.filter((p) => p._id !== id))
       }
     } catch (error) {
-      console.error("Error deleting post:", error)
+      console.error("[v0] Error deleting post:", error)
     }
   }
 
@@ -71,7 +96,7 @@ export default function BlogAdminPage() {
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
         <h1 className="text-3xl font-bold text-foreground">Blog Posts</h1>
         <Button asChild className="bg-gradient-to-r from-primary to-primary/90">
           <Link href="/admin/blog/new">
@@ -81,21 +106,23 @@ export default function BlogAdminPage() {
         </Button>
       </div>
 
-      {/* Filters */}
       <div className="flex flex-col sm:flex-row gap-4">
-        <Input
-          placeholder="Search posts..."
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-          className="flex-1"
-        />
+        <div className="relative flex-1">
+          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+          <Input
+            placeholder="Search by title, author, or category..."
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            className="pl-10 bg-card"
+          />
+        </div>
         <select
           value={status}
           onChange={(e) => {
             setStatus(e.target.value)
             setPage(1)
           }}
-          className="px-4 py-2 rounded-lg border border-border/50 bg-background text-foreground"
+          className="px-4 py-2 rounded-lg border border-border/50 bg-card text-foreground min-w-40"
         >
           <option value="all">All Posts</option>
           <option value="published">Published</option>
@@ -103,57 +130,59 @@ export default function BlogAdminPage() {
         </select>
       </div>
 
-      {/* Posts Table */}
-      <div className="border border-border/50 rounded-lg overflow-hidden">
+      <div className="border border-border/50 rounded-lg overflow-hidden bg-card">
         <div className="overflow-x-auto">
           <table className="w-full">
             <thead className="bg-muted/50 border-b border-border/50">
               <tr>
-                <th className="px-6 py-4 text-left text-sm font-semibold text-foreground">Title</th>
-                <th className="px-6 py-4 text-left text-sm font-semibold text-foreground">Category</th>
-                <th className="px-6 py-4 text-left text-sm font-semibold text-foreground">Author</th>
-                <th className="px-6 py-4 text-left text-sm font-semibold text-foreground">Status</th>
-                <th className="px-6 py-4 text-left text-sm font-semibold text-foreground">Published</th>
-                <th className="px-6 py-4 text-left text-sm font-semibold text-foreground">Views</th>
-                <th className="px-6 py-4 text-right text-sm font-semibold text-foreground">Actions</th>
+                <th className="px-4 sm:px-6 py-4 text-left text-sm font-semibold text-foreground">Title</th>
+                <th className="hidden sm:table-cell px-4 sm:px-6 py-4 text-left text-sm font-semibold text-foreground">
+                  Category
+                </th>
+                <th className="hidden md:table-cell px-4 sm:px-6 py-4 text-left text-sm font-semibold text-foreground">
+                  Author
+                </th>
+                <th className="px-4 sm:px-6 py-4 text-left text-sm font-semibold text-foreground">Status</th>
+                <th className="hidden lg:table-cell px-4 sm:px-6 py-4 text-left text-sm font-semibold text-foreground">
+                  Published
+                </th>
+                <th className="px-4 sm:px-6 py-4 text-right text-sm font-semibold text-foreground">Actions</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-border/50">
               {loading ? (
                 <tr>
-                  <td colSpan={7} className="px-6 py-8 text-center text-muted-foreground">
+                  <td colSpan={6} className="px-4 sm:px-6 py-8 text-center text-muted-foreground">
                     Loading...
                   </td>
                 </tr>
-              ) : posts.length === 0 ? (
+              ) : filteredPosts.length === 0 ? (
                 <tr>
-                  <td colSpan={7} className="px-6 py-8 text-center text-muted-foreground">
-                    No posts found
+                  <td colSpan={6} className="px-4 sm:px-6 py-8 text-center text-muted-foreground">
+                    {search || status !== "all" ? "No posts match your filters" : "No posts yet"}
                   </td>
                 </tr>
               ) : (
-                posts.map((post) => (
+                filteredPosts.map((post) => (
                   <tr key={post._id} className="hover:bg-muted/30 transition-colors">
-                    <td className="px-6 py-4">
+                    <td className="px-4 sm:px-6 py-4">
                       <div>
-                        <p className="font-medium text-foreground">{post.title}</p>
+                        <p className="font-medium text-foreground text-sm line-clamp-1">{post.title}</p>
                         <p className="text-xs text-muted-foreground">/{post.slug}</p>
                       </div>
                     </td>
-                    <td className="px-6 py-4 text-sm text-foreground">{post.category}</td>
-                    <td className="px-6 py-4 text-sm text-foreground">{post.author}</td>
-                    <td className="px-6 py-4">
-                      <Badge variant={post.status === "published" ? "default" : "secondary"}>{post.status}</Badge>
+                    <td className="hidden sm:table-cell px-4 sm:px-6 py-4 text-sm text-foreground">{post.category}</td>
+                    <td className="hidden md:table-cell px-4 sm:px-6 py-4 text-sm text-foreground">{post.author}</td>
+                    <td className="px-4 sm:px-6 py-4">
+                      <Badge variant={post.status === "published" ? "default" : "secondary"} className="text-xs">
+                        {post.status}
+                      </Badge>
                     </td>
-                    <td className="px-6 py-4 text-sm text-muted-foreground">
+                    <td className="hidden lg:table-cell px-4 sm:px-6 py-4 text-sm text-muted-foreground">
                       {formatDistanceToNow(new Date(post.publishedAt), { addSuffix: true })}
                     </td>
-                    <td className="px-6 py-4 text-sm text-foreground flex items-center gap-1">
-                      <Eye className="w-4 h-4 text-muted-foreground" />
-                      {post.views}
-                    </td>
-                    <td className="px-6 py-4">
-                      <div className="flex justify-end gap-2">
+                    <td className="px-4 sm:px-6 py-4">
+                      <div className="flex justify-end gap-1 sm:gap-2">
                         <Button asChild size="sm" variant="ghost">
                           <Link href={`/admin/blog/${post._id}`}>
                             <Edit2 className="w-4 h-4" />
@@ -191,9 +220,8 @@ export default function BlogAdminPage() {
         </div>
       </div>
 
-      {/* Pagination */}
       {pages > 1 && (
-        <div className="flex items-center justify-center gap-2">
+        <div className="flex items-center justify-center gap-2 overflow-x-auto">
           <Button
             variant="outline"
             size="sm"

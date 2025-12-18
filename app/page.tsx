@@ -6,6 +6,7 @@ import { Collection } from "@/lib/db/models/collection"
 import { Product } from "@/lib/db/models/product"
 import { ProductCard } from "@/components/product-card"
 import { Button } from "@/components/ui/button"
+import { CountdownTimer } from "@/components/countdown-timer"
 import { ArrowRight, Leaf, Package, Truck, Zap } from "lucide-react"
 
 export const metadata: Metadata = {
@@ -53,9 +54,15 @@ export default async function HomePage() {
       <main className="bg-background">
         {/* CHANGE: Added prominent 20% sale banner at the top */}
         <section className="bg-gradient-to-r from-accent via-accent/90 to-accent/95 text-accent-foreground py-3 sticky top-16 z-40 shadow-sm">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-center gap-2 text-center">
-            <Zap className="w-4 h-4 flex-shrink-0" />
-            <span className="text-sm font-semibold">Limited Time: Get 20% OFF site-wide with code ORGANIC20</span>
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-center gap-4 text-center flex-wrap">
+            <div className="flex items-center gap-2">
+              <Zap className="w-4 h-4 flex-shrink-0" />
+              <span className="text-sm font-semibold">Limited Time: Get 20% OFF site-wide with code ORGANIC20</span>
+            </div>
+            <div className="hidden sm:flex items-center gap-2 text-sm">
+              <span className="text-accent-foreground/80">Offer ends in:</span>
+              <CountdownTimer initialDays={2} initialHours={10} />
+            </div>
           </div>
         </section>
 
@@ -359,7 +366,7 @@ export default async function HomePage() {
       </main>
     )
   } catch (error) {
-    console.error("Error loading home page:", error)
+    console.error("[v0] Error loading home page:", error)
     return (
       <main className="min-h-screen flex items-center justify-center">
         <p className="text-destructive">Failed to load page. Please try again later.</p>

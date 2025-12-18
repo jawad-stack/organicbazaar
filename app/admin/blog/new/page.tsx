@@ -9,7 +9,7 @@ import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 import { Label } from "@/components/ui/label"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { ArrowLeft, Save } from "lucide-react"
+import { ArrowLeft, Save, Zap } from "lucide-react"
 import Link from "next/link"
 
 const CATEGORIES = ["Wellness", "Sustainability", "Education", "Recipe", "Lifestyle"]
@@ -17,6 +17,7 @@ const CATEGORIES = ["Wellness", "Sustainability", "Education", "Recipe", "Lifest
 export default function NewBlogPostPage() {
   const router = useRouter()
   const [loading, setLoading] = useState(false)
+  const [aiLoading, setAiLoading] = useState(false)
   const [formData, setFormData] = useState({
     title: "",
     excerpt: "",
@@ -28,6 +29,40 @@ export default function NewBlogPostPage() {
     seoDescription: "",
     seoKeywords: "",
   })
+
+  const handleAIGenerate = async () => {
+    if (!formData.title.trim()) {
+      alert("Please enter a post title first")
+      return
+    }
+
+    setAiLoading(true)
+    try {
+      const response = await fetch("/api/ai/generate-blog-content", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          blogTitle: formData.title,
+          category: formData.category,
+        }),
+      })
+
+      if (response.ok) {
+        const data = await response.json()
+        setFormData((prev) => ({
+          ...prev,
+          excerpt: data.excerpt || prev.excerpt,
+          content: data.content || prev.content,
+          seoDescription: data.seoDescription || prev.seoDescription,
+          seoKeywords: (Array.isArray(data.keywords) ? data.keywords : []).join(", "),
+        }))
+      }
+    } catch (error) {
+      console.error("[v0] Error generating content:", error)
+    } finally {
+      setAiLoading(false)
+    }
+  }
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -49,7 +84,7 @@ export default function NewBlogPostPage() {
         alert("Failed to create post")
       }
     } catch (error) {
-      console.error("Error creating post:", error)
+      console.error("[v0] Error creating post:", error)
       alert("Error creating post")
     } finally {
       setLoading(false)
@@ -68,7 +103,6 @@ export default function NewBlogPostPage() {
       </div>
 
       <form onSubmit={handleSubmit} className="space-y-6 bg-card border border-border/50 rounded-lg p-6">
-        {/* Title */}
         <div className="space-y-2">
           <Label htmlFor="title">Title *</Label>
           <Input
@@ -81,7 +115,19 @@ export default function NewBlogPostPage() {
           />
         </div>
 
-        {/* Excerpt */}
+        <div className="flex gap-2">
+          <Button
+            type="button"
+            variant="outline"
+            onClick={handleAIGenerate}
+            disabled={aiLoading}
+            className="bg-transparent"
+          >
+            <Zap className="w-4 h-4 mr-2" />
+            {aiLoading ? "Generating..." : "AI Generate"}
+          </Button>
+        </div>
+
         <div className="space-y-2">
           <Label htmlFor="excerpt">Excerpt *</Label>
           <Textarea
@@ -95,7 +141,6 @@ export default function NewBlogPostPage() {
           />
         </div>
 
-        {/* Content */}
         <div className="space-y-2">
           <Label htmlFor="content">Content *</Label>
           <Textarea
@@ -109,7 +154,6 @@ export default function NewBlogPostPage() {
           />
         </div>
 
-        {/* Category & Author */}
         <div className="grid grid-cols-2 gap-4">
           <div className="space-y-2">
             <Label htmlFor="category">Category *</Label>
@@ -140,7 +184,6 @@ export default function NewBlogPostPage() {
           </div>
         </div>
 
-        {/* Image URL */}
         <div className="space-y-2">
           <Label htmlFor="image">Featured Image URL</Label>
           <Input
@@ -153,7 +196,6 @@ export default function NewBlogPostPage() {
           />
         </div>
 
-        {/* SEO Fields */}
         <div className="space-y-4 border-t border-border/50 pt-4">
           <h3 className="font-semibold text-foreground">SEO Settings</h3>
 
@@ -181,7 +223,6 @@ export default function NewBlogPostPage() {
           </div>
         </div>
 
-        {/* Status */}
         <div className="space-y-2">
           <Label htmlFor="status">Status</Label>
           <Select value={formData.status} onValueChange={(value) => setFormData({ ...formData, status: value as any })}>
@@ -195,7 +236,6 @@ export default function NewBlogPostPage() {
           </Select>
         </div>
 
-        {/* Submit */}
         <div className="flex gap-3 justify-end pt-4 border-t border-border/50">
           <Button asChild variant="outline" className="bg-transparent">
             <Link href="/admin/blog">Cancel</Link>

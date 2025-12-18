@@ -9,7 +9,7 @@ import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 import { Label } from "@/components/ui/label"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { ArrowLeft, Save } from "lucide-react"
+import { ArrowLeft, Save, Zap } from "lucide-react"
 import Link from "next/link"
 
 const CATEGORIES = ["Wellness", "Sustainability", "Education", "Recipe", "Lifestyle"]
@@ -20,6 +20,7 @@ export default function EditBlogPostPage() {
   const id = params.id as string
   const [loading, setLoading] = useState(true)
   const [saving, setSaving] = useState(false)
+  const [aiLoading, setAiLoading] = useState(false)
   const [formData, setFormData] = useState({
     title: "",
     excerpt: "",
@@ -47,9 +48,43 @@ export default function EditBlogPostPage() {
         })
       }
     } catch (error) {
-      console.error("Error fetching post:", error)
+      console.error("[v0] Error fetching post:", error)
     } finally {
       setLoading(false)
+    }
+  }
+
+  const handleAIGenerate = async () => {
+    if (!formData.title.trim()) {
+      alert("Please enter a post title first")
+      return
+    }
+
+    setAiLoading(true)
+    try {
+      const response = await fetch("/api/ai/generate-blog-content", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          blogTitle: formData.title,
+          category: formData.category,
+        }),
+      })
+
+      if (response.ok) {
+        const data = await response.json()
+        setFormData((prev) => ({
+          ...prev,
+          excerpt: data.excerpt || prev.excerpt,
+          content: data.content || prev.content,
+          seoDescription: data.seoDescription || prev.seoDescription,
+          seoKeywords: (Array.isArray(data.keywords) ? data.keywords : []).join(", "),
+        }))
+      }
+    } catch (error) {
+      console.error("[v0] Error generating content:", error)
+    } finally {
+      setAiLoading(false)
     }
   }
 
@@ -73,7 +108,7 @@ export default function EditBlogPostPage() {
         alert("Failed to update post")
       }
     } catch (error) {
-      console.error("Error updating post:", error)
+      console.error("[v0] Error updating post:", error)
       alert("Error updating post")
     } finally {
       setSaving(false)
@@ -81,7 +116,7 @@ export default function EditBlogPostPage() {
   }
 
   if (loading) {
-    return <div className="text-center py-12">Loading...</div>
+    return <div className="text-center py-12 text-muted-foreground">Loading...</div>
   }
 
   return (
@@ -106,6 +141,19 @@ export default function EditBlogPostPage() {
             required
             className="bg-background"
           />
+        </div>
+
+        <div className="flex gap-2">
+          <Button
+            type="button"
+            variant="outline"
+            onClick={handleAIGenerate}
+            disabled={aiLoading}
+            className="bg-transparent"
+          >
+            <Zap className="w-4 h-4 mr-2" />
+            {aiLoading ? "Generating..." : "AI Generate"}
+          </Button>
         </div>
 
         <div className="space-y-2">
