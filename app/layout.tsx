@@ -97,7 +97,7 @@ export default function RootLayout({
               className="relative h-10 w-48 flex items-center hover:opacity-90 transition-opacity duration-200"
             >
               <Image
-                src="/images/logo-20landscape.png"
+                src="/public/apple-icon.png"
                 alt="Organic Bazaar"
                 fill
                 className="object-contain"
