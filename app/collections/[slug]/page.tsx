@@ -26,14 +26,15 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     }
 
     return {
-      title: collection.seoDescription || `${collection.name} - Organic Products`,
-      description: collection.description,
-      keywords: collection.seoKeywords,
+      title: `${collection.name} - 100% Organic Products | Organic Bazaar`,
+      description: collection.description || `Shop our ${collection.name} collection of certified organic products.`,
+      keywords: [collection.name, "organic", "sustainable", ...(collection.seoKeywords || [])],
       openGraph: {
         title: collection.name,
         description: collection.description,
         type: "website",
-        images: collection.image ? [{ url: collection.image }] : [],
+        url: `https://organicbazaar.online/collections/${slug}`,
+        images: collection.image ? [{ url: collection.image, width: 1200, height: 630 }] : [],
       },
       twitter: {
         card: "summary_large_image",
@@ -78,27 +79,29 @@ export default async function CollectionPage({ params }: PageProps) {
     return (
       <main className="min-h-screen bg-background">
         {/* Breadcrumb */}
-        <div className="max-w-7xl mx-auto px-4 py-4 text-sm">
+        <div className="max-w-7xl mx-auto px-4 py-4 text-sm" aria-label="Breadcrumb">
           <Link href="/" className="text-primary hover:underline">
             Home
           </Link>
           <span className="mx-2 text-muted-foreground">/</span>
-          <span className="text-foreground">{safeCollection.name}</span>
+          <span className="text-foreground" aria-current="page">
+            {safeCollection.name}
+          </span>
         </div>
 
         {/* Collection Header */}
-        <section className="bg-muted/50 py-12">
+        <section className="bg-gradient-to-br from-primary/5 via-background to-accent/5 py-12 md:py-16">
           <div className="max-w-7xl mx-auto px-4">
-            <h1 className="text-4xl font-bold text-foreground mb-4">{safeCollection.name}</h1>
-            <p className="text-lg text-muted-foreground">{safeCollection.description}</p>
+            <h1 className="text-4xl md:text-5xl font-bold text-foreground mb-4 text-balance">{safeCollection.name}</h1>
+            <p className="text-lg text-muted-foreground max-w-2xl">{safeCollection.description}</p>
           </div>
         </section>
 
         {/* Products Grid */}
-        <section className="py-16">
+        <section className="py-16 md:py-20">
           <div className="max-w-7xl mx-auto px-4">
-                {serializedProducts.length > 0 ? (
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {serializedProducts.length > 0 ? (
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                 {serializedProducts.map((product: any) => (
                   <ProductCard
                     key={product._id}
@@ -120,6 +123,27 @@ export default async function CollectionPage({ params }: PageProps) {
             )}
           </div>
         </section>
+
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              "@context": "https://schema.org",
+              "@type": "Collection",
+              name: safeCollection.name,
+              description: safeCollection.description,
+              image: safeCollection.image,
+              url: `https://organicbazaar.online/collections/${slug}`,
+              numberOfItems: serializedProducts.length,
+              itemListElement: serializedProducts.map((product: any, index: number) => ({
+                "@type": "ListItem",
+                position: index + 1,
+                name: product.name,
+                url: `https://organicbazaar.online/products/${product.slug}`,
+              })),
+            }),
+          }}
+        />
       </main>
     )
   } catch (error) {
