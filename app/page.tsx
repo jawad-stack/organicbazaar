@@ -130,7 +130,7 @@ export default async function HomePage() {
               {/* Right: Hero Image */}
               <div className="relative h-72 md:h-80 lg:h-96 rounded-xl overflow-hidden shadow-xl">
                 <Image
-                  src="/images/landing-20pae-20hero-20image.jpg"
+                  src="/images/landing-page-hero-image.jpg"
                   alt="Fresh organic products including vegetables, herbs, and mushrooms"
                   fill
                   className="object-cover"
