@@ -5,19 +5,25 @@ import { notFound } from "next/navigation"
 import { formatDistanceToNow } from "date-fns"
 import { ArrowLeft, Share2 } from "lucide-react"
 import { Button } from "@/components/ui/button"
+import { connectDB } from "@/lib/db/connection"
+import { BlogPost } from "@/lib/db/models/blog"
 
-export async function generateMetadata({ params }: { params: { slug: string } }): Promise<Metadata> {
+interface PageProps {
+  params: Promise<{ slug: string }>
+}
+
+export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
+  const { slug } = await params
+
   try {
-    const response = await fetch(`http://localhost:3000/api/blog/${params.slug}`)
+    await connectDB()
+    const post = await BlogPost.findOne({ slug, status: "published" }).lean()
 
-    if (!response.ok) {
+    if (!post) {
       return {
         title: "Post Not Found",
       }
     }
-
-    const data = await response.json()
-    const post = data.post
 
     return {
       title: post.title,
@@ -27,15 +33,17 @@ export async function generateMetadata({ params }: { params: { slug: string } })
         title: post.title,
         description: post.excerpt,
         type: "article",
-        publishedTime: post.publishedAt,
+        publishedTime: post.publishedAt?.toISOString(),
         authors: [post.author],
-        images: [
-          {
-            url: post.image,
-            width: 1200,
-            height: 630,
-          },
-        ],
+        images: post.image
+          ? [
+              {
+                url: post.image,
+                width: 1200,
+                height: 630,
+              },
+            ]
+          : [],
       },
     }
   } catch (error) {
@@ -45,19 +53,44 @@ export async function generateMetadata({ params }: { params: { slug: string } })
   }
 }
 
-export default async function BlogPostPage({ params }: { params: { slug: string } }) {
-  try {
-    const response = await fetch(`http://localhost:3000/api/blog/${params.slug}`, {
-      next: { revalidate: 3600 },
-    })
+export default async function BlogPostPage({ params }: PageProps) {
+  const { slug } = await params
 
-    if (!response.ok) {
+  try {
+    await connectDB()
+
+    const post = await BlogPost.findOne({ slug, status: "published" }).lean()
+
+    if (!post) {
       notFound()
     }
 
-    const data = await response.json()
-    const post = data.post
-    const relatedPosts = data.relatedPosts
+    // Increment views
+    await BlogPost.updateOne({ _id: post._id }, { $inc: { views: 1 } })
+
+    // Get related posts from same category
+    const relatedPosts = await BlogPost.find({
+      category: post.category,
+      _id: { $ne: post._id },
+      status: "published",
+    })
+      .limit(3)
+      .lean()
+
+    // Serialize the data
+    const serializedPost = {
+      ...post,
+      _id: String(post._id),
+      publishedAt: post.publishedAt?.toISOString(),
+      createdAt: post.createdAt?.toISOString(),
+      updatedAt: post.updatedAt?.toISOString(),
+    }
+
+    const serializedRelated = relatedPosts.map((p: any) => ({
+      ...p,
+      _id: String(p._id),
+      publishedAt: p.publishedAt?.toISOString(),
+    }))
 
     return (
       <main className="bg-background">
@@ -74,8 +107,8 @@ export default async function BlogPostPage({ params }: { params: { slug: string 
         {/* Hero Image */}
         <section className="relative h-96 md:h-[500px] overflow-hidden">
           <Image
-            src={post.image || "/placeholder.svg?height=800&width=1200&query=organic+blog+hero"}
-            alt={post.title}
+            src={serializedPost.image || "/placeholder.svg?height=800&width=1200&query=organic+blog+hero"}
+            alt={serializedPost.title}
             fill
             className="object-cover"
             priority
@@ -91,10 +124,10 @@ export default async function BlogPostPage({ params }: { params: { slug: string 
             <div className="flex items-center justify-between flex-wrap gap-4">
               <div className="flex items-center gap-4 flex-wrap">
                 <span className="inline-block px-3 py-1 bg-primary/10 text-primary text-xs font-semibold uppercase tracking-wider rounded-full">
-                  {post.category}
+                  {serializedPost.category}
                 </span>
                 <span className="text-sm text-muted-foreground">
-                  {formatDistanceToNow(new Date(post.publishedAt), { addSuffix: true })}
+                  {formatDistanceToNow(new Date(serializedPost.publishedAt), { addSuffix: true })}
                 </span>
               </div>
               <Button size="sm" variant="outline" className="gap-2 bg-transparent">
@@ -103,12 +136,14 @@ export default async function BlogPostPage({ params }: { params: { slug: string 
               </Button>
             </div>
 
-            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-foreground text-balance">{post.title}</h1>
+            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-foreground text-balance">
+              {serializedPost.title}
+            </h1>
 
             <div className="flex items-center gap-4 text-sm text-muted-foreground">
-              <span>By {post.author}</span>
+              <span>By {serializedPost.author}</span>
               <span>•</span>
-              <span>{post.views} views</span>
+              <span>{serializedPost.views} views</span>
             </div>
           </div>
 
@@ -116,14 +151,14 @@ export default async function BlogPostPage({ params }: { params: { slug: string 
           <div className="h-px bg-border/50 my-8" />
 
           {/* Excerpt */}
-          <p className="text-xl text-muted-foreground mb-8 leading-relaxed">{post.excerpt}</p>
+          <p className="text-xl text-muted-foreground mb-8 leading-relaxed">{serializedPost.excerpt}</p>
 
           {/* Content - Rich text rendering */}
           <div className="prose prose-invert max-w-none mb-12">
             <div
               className="text-foreground leading-relaxed space-y-6"
               dangerouslySetInnerHTML={{
-                __html: post.content.replace(/\n/g, "<br/>"),
+                __html: serializedPost.content.replace(/\n/g, "<br/>"),
               }}
             />
           </div>
@@ -134,18 +169,18 @@ export default async function BlogPostPage({ params }: { params: { slug: string 
           {/* Author Info */}
           <div className="bg-muted/30 rounded-lg p-6 mb-12">
             <p className="text-sm text-muted-foreground mb-2">Written by</p>
-            <p className="text-lg font-semibold text-foreground">{post.author}</p>
+            <p className="text-lg font-semibold text-foreground">{serializedPost.author}</p>
             <p className="text-sm text-muted-foreground mt-2">
               Expert in sustainable living and organic product development.
             </p>
           </div>
 
           {/* Related Posts */}
-          {relatedPosts && relatedPosts.length > 0 && (
+          {serializedRelated && serializedRelated.length > 0 && (
             <section className="mt-16">
               <h2 className="text-3xl font-bold text-foreground mb-8">Related Articles</h2>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                {relatedPosts.map((relatedPost: any) => (
+                {serializedRelated.map((relatedPost: any) => (
                   <Link key={relatedPost._id} href={`/blog/${relatedPost.slug}`}>
                     <div className="group flex flex-col h-full rounded-lg border border-border/50 overflow-hidden hover:border-primary/30 hover:shadow-md transition-all duration-300">
                       <div className="relative h-32 bg-muted overflow-hidden">
@@ -182,13 +217,47 @@ export default async function BlogPostPage({ params }: { params: { slug: string 
             </Button>
           </div>
         </section>
+
+        {/* JSON-LD Structured Data for SEO */}
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              "@context": "https://schema.org",
+              "@type": "BlogPosting",
+              headline: serializedPost.title,
+              description: serializedPost.excerpt,
+              image: serializedPost.image,
+              author: {
+                "@type": "Person",
+                name: serializedPost.author,
+              },
+              publisher: {
+                "@type": "Organization",
+                name: "Organic Bazaar",
+                logo: {
+                  "@type": "ImageObject",
+                  url: "https://organicbazaar.online/logo.png",
+                },
+              },
+              datePublished: serializedPost.publishedAt,
+              dateModified: serializedPost.updatedAt || serializedPost.publishedAt,
+            }),
+          }}
+        />
       </main>
     )
   } catch (error) {
-    console.error("Error loading blog post:", error)
+    console.error("[v0] Error loading blog post:", error)
     return (
       <main className="min-h-screen flex items-center justify-center">
-        <p className="text-destructive">Failed to load post. Please try again later.</p>
+        <div className="text-center">
+          <h1 className="text-2xl font-bold text-foreground mb-2">Unable to Load Post</h1>
+          <p className="text-muted-foreground mb-6">Failed to load this post. Please try again later.</p>
+          <Button asChild>
+            <Link href="/blog">Back to Blog</Link>
+          </Button>
+        </div>
       </main>
     )
   }

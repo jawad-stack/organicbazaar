@@ -4,6 +4,8 @@ import Image from "next/image"
 import { formatDistanceToNow } from "date-fns"
 import { ArrowRight, Search } from "lucide-react"
 import { Button } from "@/components/ui/button"
+import { connectDB } from "@/lib/db/connection"
+import { BlogPost } from "@/lib/db/models/blog"
 
 export const metadata: Metadata = {
   title: "Blog - Organic Living Tips & Insights | Organic Bazaar",
@@ -19,24 +21,25 @@ export const metadata: Metadata = {
 
 export default async function BlogPage() {
   try {
-    // CHANGE: Fixed fetch URL syntax error - proper template literal and protocol
-    const response = await fetch(
-      `${process.env.NEXT_PUBLIC_METADATA_BASE || "http://localhost:3000"}/api/blog?limit=12`,
-      {
-        next: { revalidate: 3600 },
-      },
-    )
+    await connectDB()
 
-    if (!response.ok) {
-      throw new Error("Failed to fetch posts")
-    }
+    const [posts, categories] = await Promise.all([
+      BlogPost.find({ status: "published" }).sort({ publishedAt: -1 }).limit(12).lean(),
+      BlogPost.distinct("category", { status: "published" }),
+    ])
 
-    const data = await response.json()
-    const { posts, categories } = data
+    // Serialize the data
+    const serializedPosts = posts.map((p: any) => ({
+      ...p,
+      _id: String(p._id),
+      publishedAt: p.publishedAt.toISOString(),
+      createdAt: p.createdAt?.toISOString(),
+      updatedAt: p.updatedAt?.toISOString(),
+    }))
 
     return (
       <main className="bg-background">
-        {/* CHANGE: Tightened hero section with better spacing */}
+        {/* Hero Section */}
         <section className="py-12 md:py-16 bg-gradient-to-br from-primary/5 via-background to-accent/5">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="text-center space-y-4">
@@ -47,7 +50,7 @@ export default async function BlogPage() {
                 Expert insights, tips, and stories to help you live more sustainably and healthily
               </p>
 
-              {/* Search Bar - CHANGE: Improved styling */}
+              {/* Search Bar */}
               <div className="flex items-center gap-2 bg-card border border-border/50 rounded-lg p-2.5 max-w-md mx-auto mt-6">
                 <Search className="w-4 h-4 text-muted-foreground flex-shrink-0 ml-1" />
                 <input
@@ -60,7 +63,7 @@ export default async function BlogPage() {
           </div>
         </section>
 
-        {/* Categories - CHANGE: Tighter button layout */}
+        {/* Categories */}
         <section className="py-6 border-b border-border/50">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="flex flex-wrap gap-2 items-center justify-center">
@@ -85,12 +88,12 @@ export default async function BlogPage() {
           </div>
         </section>
 
-        {/* Blog Posts Grid - CHANGE: Improved card density and typography */}
+        {/* Blog Posts Grid */}
         <section className="py-16 md:py-20">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            {posts && posts.length > 0 ? (
+            {serializedPosts && serializedPosts.length > 0 ? (
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {posts.map((post: any) => (
+                {serializedPosts.map((post: any) => (
                   <Link key={post._id} href={`/blog/${post.slug}`}>
                     <article className="group flex flex-col h-full rounded-lg border border-border/50 overflow-hidden hover:border-primary/30 hover:shadow-md transition-all duration-300">
                       {/* Image */}
@@ -143,7 +146,7 @@ export default async function BlogPage() {
       </main>
     )
   } catch (error) {
-    console.error("Error loading blog page:", error)
+    console.error("[v0] Error loading blog page:", error)
     return (
       <main className="min-h-screen flex items-center justify-center bg-background">
         <div className="text-center">
