@@ -340,7 +340,7 @@ export default async function HomePage() {
         </section>
 
         {/* CTA Section - CHANGE: Tighter padding */}
-        <section className="py-16 md:py-20 bg-gradient-to-r from-primary/95 to-primary rounded-lg mx-4 md:mx-8 lg:mx-4 max-w-7xl lg:max-w-6xl xl:max-w-7xl mx-auto mb-8">
+        <section className="py-16 md:py-20 bg-gradient-to-r from-primary/95 to-primary rounded-lg max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="relative z-10 text-center space-y-4 px-4 sm:px-6">
             <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold text-primary-foreground text-balance">
               Join Our Organic Community
