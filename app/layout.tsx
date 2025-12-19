@@ -32,7 +32,7 @@ export const metadata: Metadata = {
     type: "website",
     siteName: "Organic Bazaar",
     locale: "en_US",
-    images: ["/apple-icon.png],
+    images: ["/apple-icon.png"],
   },
   twitter: {
     card: "summary_large_image",
