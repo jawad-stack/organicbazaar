@@ -19,7 +19,7 @@ export const metadata: Metadata = {
 
 export default async function BlogPage() {
   try {
-    const response = await fetch(`https://www.organicbazaar.online/api/blog?limit=12", {
+    const response = await fetch(`/api/blog?limit=12", {
       next: { revalidate: 3600 },
     })
 
