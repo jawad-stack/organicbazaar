@@ -19,9 +19,13 @@ export const metadata: Metadata = {
 
 export default async function BlogPage() {
   try {
-    const response = await fetch(`/api/blog?limit=12", {
-      next: { revalidate: 3600 },
-    })
+    // CHANGE: Fixed fetch URL syntax error - proper template literal and protocol
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_METADATA_BASE || "http://localhost:3000"}/api/blog?limit=12`,
+      {
+        next: { revalidate: 3600 },
+      },
+    )
 
     if (!response.ok) {
       throw new Error("Failed to fetch posts")
