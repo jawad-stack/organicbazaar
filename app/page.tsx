@@ -130,7 +130,7 @@ export default async function HomePage() {
               {/* Right: Hero Image */}
               <div className="relative h-72 md:h-80 lg:h-96 rounded-xl overflow-hidden shadow-xl">
                 <Image
-                  src="/placeholder.svg?height=600&width=600"
+                  src="../public/2149028612.jpg"
                   alt="Organic products showcase"
                   fill
                   className="object-cover"
