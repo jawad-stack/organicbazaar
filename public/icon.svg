@@ -1,26 +1,13 @@
-<svg width="180" height="180" viewBox="0 0 180 180" fill="none" xmlns="http://www.w3.org/2000/svg">
-  <style>
-    @media (prefers-color-scheme: light) {
-      .background { fill: black; }
-      .foreground { fill: white; }
-    }
-    @media (prefers-color-scheme: dark) {
-      .background { fill: white; }
-      .foreground { fill: black; }
-    }
-  </style>
-  <g clip-path="url(#clip0_7960_43945)">
-    <rect class="background" width="180" height="180" rx="37" />
-    <g style="transform: scale(95%); transform-origin: center">
-      <path class="foreground"
-        d="M101.141 53H136.632C151.023 53 162.689 64.6662 162.689 79.0573V112.904H148.112V79.0573C148.112 78.7105 148.098 78.3662 148.072 78.0251L112.581 112.898C112.701 112.902 112.821 112.904 112.941 112.904H148.112V126.672H112.941C98.5504 126.672 86.5638 114.891 86.5638 100.5V66.7434H101.141V100.5C101.141 101.15 101.191 101.792 101.289 102.422L137.56 66.7816C137.255 66.7563 136.945 66.7434 136.632 66.7434H101.141V53Z" />
-      <path class="foreground"
-        d="M65.2926 124.136L14 66.7372H34.6355L64.7495 100.436V66.7372H80.1365V118.47C80.1365 126.278 70.4953 129.958 65.2926 124.136Z" />
-    </g>
+<svg width="300" height="100" viewBox="0 0 300 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <g id="logo-icon">
+    <path d="M20 50C20 30 35 15 55 15C55 15 45 35 45 50C45 65 55 85 55 85C35 85 20 70 20 50Z" fill="#2D5A27" />
+    <path d="M45 50C45 65 55 85 85 85C85 85 70 75 60 65C50 55 45 50 45 50Z" fill="#86D081" />
+    <circle cx="58" cy="45" r="12" fill="#E67E22" />
   </g>
-  <defs>
-    <clipPath id="clip0_7960_43945">
-      <rect width="180" height="180" fill="white" />
-    </clipPath>
-  </defs>
+
+  <g id="logo-text">
+    <text x="100" y="52" font-family="Arial, sans-serif" font-size="28" font-weight="700" fill="#2D5A27">Organic</text>
+    <text x="215" y="52" font-family="Arial, sans-serif" font-size="28" font-weight="400" fill="#E67E22">Bazaar</text>
+    <text x="100" y="75" font-family="Arial, sans-serif" font-size="12" font-weight="400" fill="#666666" letter-spacing="1.5">PURE • NATURAL • TRUSTED</text>
+  </g>
 </svg>
