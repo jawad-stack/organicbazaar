@@ -32,11 +32,13 @@ export const metadata: Metadata = {
     type: "website",
     siteName: "Organic Bazaar",
     locale: "en_US",
+    images: ["/apple-icon.png],
   },
   twitter: {
     card: "summary_large_image",
     title: "Organic Products Store - Shop Pure & Sustainable",
     description: "Discover our curated selection of 100% organic, sustainably sourced products.",
+    images: ["/apple-icon.png"],
   },
   robots: {
     index: true,
