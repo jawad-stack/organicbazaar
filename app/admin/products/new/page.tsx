@@ -11,6 +11,14 @@ import { Label } from "@/components/ui/label"
 import { ArrowLeft, Plus, Trash2, Zap } from "lucide-react"
 import Link from "next/link"
 
+interface Variant {
+  name: string
+  sku: string
+  attributes: Record<string, string>
+  price: number
+  stock: number
+}
+
 const CATEGORIES = ["Wellness", "Beauty", "Food", "Lifestyle", "Supplements"]
 
 export default function NewProductPage() {
@@ -24,7 +32,7 @@ export default function NewProductPage() {
     description: "",
     categories: [] as string[],
     status: "active",
-    variants: [{ name: "", price: 0, stock: 0 }],
+    variants: [{ name: "Default", sku: "", attributes: {}, price: 0, stock: 0 }] as Variant[],
   })
 
   const handleAIGenerate = async () => {
@@ -76,7 +84,7 @@ export default function NewProductPage() {
   const handleAddVariant = () => {
     setFormData((prev) => ({
       ...prev,
-      variants: [...prev.variants, { name: "", price: 0, stock: 0 }],
+      variants: [...prev.variants, { name: "", sku: "", attributes: {}, price: 0, stock: 0 }],
     }))
   }
 
@@ -89,23 +97,49 @@ export default function NewProductPage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
+
+    if (!formData.name || !formData.description) {
+      alert("Please fill in all required fields")
+      return
+    }
+
+    const slug =
+      formData.slug ||
+      formData.name
+        .toLowerCase()
+        .replace(/\s+/g, "-")
+        .replace(/[^a-z0-9-]/g, "")
+
+    const variantsWithSKU = formData.variants.map((v, idx) => ({
+      ...v,
+      sku: v.sku || `${slug}-${v.name.toLowerCase().replace(/\s+/g, "-") || "default"}-${Date.now()}-${idx}`,
+      attributes: v.attributes && Object.keys(v.attributes).length > 0 ? v.attributes : { size: "standard" },
+    }))
+
     setLoading(true)
 
     try {
       const response = await fetch("/api/admin/products", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(formData),
+        body: JSON.stringify({
+          ...formData,
+          slug,
+          variants: variantsWithSKU,
+        }),
       })
 
+      const data = await response.json()
+
       if (response.ok) {
+        alert("Product created successfully!")
         router.push("/admin/products")
       } else {
-        alert("Failed to create product")
+        alert(`Failed to create product: ${data.details || data.error}`)
       }
     } catch (error) {
       console.error("[v0] Error creating product:", error)
-      alert("Error creating product")
+      alert("Error creating product. Please try again.")
     } finally {
       setLoading(false)
     }
@@ -215,52 +249,109 @@ export default function NewProductPage() {
           </div>
 
           {formData.variants.map((variant, idx) => (
-            <div key={idx} className="grid grid-cols-3 gap-3 p-3 bg-muted/30 rounded-lg">
-              <Input
-                value={variant.name}
-                onChange={(e) => {
-                  const newVariants = [...formData.variants]
-                  newVariants[idx].name = e.target.value
-                  setFormData({ ...formData, variants: newVariants })
-                }}
-                placeholder="Variant name"
-                className="bg-background text-sm"
-              />
-              <Input
-                type="number"
-                value={variant.price}
-                onChange={(e) => {
-                  const newVariants = [...formData.variants]
-                  newVariants[idx].price = Number(e.target.value)
-                  setFormData({ ...formData, variants: newVariants })
-                }}
-                placeholder="Price"
-                className="bg-background text-sm"
-              />
-              <div className="flex gap-2">
+            <div key={idx} className="space-y-3 p-4 bg-muted/30 rounded-lg border border-border/30">
+              <div className="grid grid-cols-2 gap-3">
+                <div className="space-y-1.5">
+                  <Label className="text-xs text-muted-foreground">Variant Name *</Label>
+                  <Input
+                    value={variant.name}
+                    onChange={(e) => {
+                      const newVariants = [...formData.variants]
+                      newVariants[idx].name = e.target.value
+                      setFormData({ ...formData, variants: newVariants })
+                    }}
+                    placeholder="e.g., Small, Large"
+                    className="bg-background text-sm"
+                    required
+                  />
+                </div>
+                <div className="space-y-1.5">
+                  <Label className="text-xs text-muted-foreground">
+                    SKU <span className="text-xs opacity-50">(auto-generated if empty)</span>
+                  </Label>
+                  <Input
+                    value={variant.sku}
+                    onChange={(e) => {
+                      const newVariants = [...formData.variants]
+                      newVariants[idx].sku = e.target.value
+                      setFormData({ ...formData, variants: newVariants })
+                    }}
+                    placeholder="e.g., ORG-PRD-001"
+                    className="bg-background text-sm"
+                  />
+                </div>
+              </div>
+
+              <div className="grid grid-cols-2 gap-3">
+                <div className="space-y-1.5">
+                  <Label className="text-xs text-muted-foreground">Price (₹) *</Label>
+                  <Input
+                    type="number"
+                    value={variant.price}
+                    onChange={(e) => {
+                      const newVariants = [...formData.variants]
+                      newVariants[idx].price = Number(e.target.value)
+                      setFormData({ ...formData, variants: newVariants })
+                    }}
+                    placeholder="299"
+                    className="bg-background text-sm"
+                    required
+                    min="0"
+                  />
+                </div>
+                <div className="space-y-1.5">
+                  <Label className="text-xs text-muted-foreground">Stock *</Label>
+                  <Input
+                    type="number"
+                    value={variant.stock}
+                    onChange={(e) => {
+                      const newVariants = [...formData.variants]
+                      newVariants[idx].stock = Number(e.target.value)
+                      setFormData({ ...formData, variants: newVariants })
+                    }}
+                    placeholder="50"
+                    className="bg-background text-sm"
+                    required
+                    min="0"
+                  />
+                </div>
+              </div>
+
+              <div className="space-y-1.5">
+                <Label className="text-xs text-muted-foreground">
+                  Attributes <span className="text-xs opacity-50">(e.g., size: 500g, color: green)</span>
+                </Label>
                 <Input
-                  type="number"
-                  value={variant.stock}
+                  value={Object.entries(variant.attributes || {})
+                    .map(([k, v]) => `${k}: ${v}`)
+                    .join(", ")}
                   onChange={(e) => {
                     const newVariants = [...formData.variants]
-                    newVariants[idx].stock = Number(e.target.value)
+                    const attrs: Record<string, string> = {}
+                    e.target.value.split(",").forEach((pair) => {
+                      const [key, val] = pair.split(":").map((s) => s.trim())
+                      if (key && val) attrs[key] = val
+                    })
+                    newVariants[idx].attributes = attrs
                     setFormData({ ...formData, variants: newVariants })
                   }}
-                  placeholder="Stock"
-                  className="bg-background text-sm flex-1"
+                  placeholder="size: 500g, unit: pack"
+                  className="bg-background text-sm"
                 />
-                {formData.variants.length > 1 && (
-                  <Button
-                    type="button"
-                    size="sm"
-                    variant="ghost"
-                    onClick={() => handleRemoveVariant(idx)}
-                    className="text-destructive hover:bg-destructive/10"
-                  >
-                    <Trash2 className="w-4 h-4" />
-                  </Button>
-                )}
               </div>
+
+              {formData.variants.length > 1 && (
+                <Button
+                  type="button"
+                  size="sm"
+                  variant="ghost"
+                  onClick={() => handleRemoveVariant(idx)}
+                  className="text-destructive hover:bg-destructive/10 w-full"
+                >
+                  <Trash2 className="w-4 h-4 mr-2" />
+                  Remove Variant
+                </Button>
+              )}
             </div>
           ))}
         </div>
