@@ -36,7 +36,7 @@ A production-ready, SEO-optimized e-commerce application for organic products bu
 
 ## Project Structure
 
-```
+\`\`\`
 ├── app/
 │   ├── api/              # Route handlers
 │   ├── products/         # Product pages
@@ -61,43 +61,43 @@ A production-ready, SEO-optimized e-commerce application for organic products bu
 │   └── seo/             # SEO utilities
 └── scripts/
     └── seed-db.ts       # Database seeding script
-```
+\`\`\`
 
 ## Environment Variables
 
-```env
+\`\`\`env
 MONGODB_URI=your_mongodb_connection_string
-```
+\`\`\`
 
 ## Getting Started
 
 ### 1. Install Dependencies
-```bash
+\`\`\`bash
 npm install
-```
+\`\`\`
 
 ### 2. Set Environment Variables
 Create a \`.env.local\` file:
-```env
+\`\`\`env
 MONGODB_URI=mongodb+srv://username:password@cluster.mongodb.net/organic-store
-```
+\`\`\`
 
 ### 3. Seed the Database
-```bash
+\`\`\`bash
 npx tsx scripts/seed-db.ts
-```
+\`\`\`
 
 ### 4. Run Development Server
-```bash
+\`\`\`bash
 npm run dev
-```
+\`\`\`
 
 Visit \`http://localhost:3000\` to see your store.
 
 ## Data Models
 
 ### Product
-```
+\`\`\`
 - name
 - slug (indexed, unique)
 - description
@@ -112,25 +112,25 @@ Visit \`http://localhost:3000\` to see your store.
   - image (optional)
 - status (active/inactive)
 - seoTitle, seoDescription, seoKeywords
-```
+\`\`\`
 
 ### Collection
-```
+\`\`\`
 - name
 - slug (indexed, unique)
 - description
 - image
 - seoDescription, seoKeywords
-```
+\`\`\`
 
 ### Order
-```
+\`\`\`
 - lineItems (snapshots of product + variant at purchase)
 - total
 - status (pending/completed/cancelled)
 - customerEmail
 - createdAt, updatedAt
-```
+\`\`\`
 
 ## SEO Features
 
