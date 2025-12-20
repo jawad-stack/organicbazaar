@@ -139,6 +139,7 @@ export default async function ProductPage({ params }: PageProps) {
                         fill
                         className="object-cover rounded"
                         sizes="100px"
+                        onClick={()=> setImageUrl(img?.url)}
                       />
                     </div>
                   ))}
