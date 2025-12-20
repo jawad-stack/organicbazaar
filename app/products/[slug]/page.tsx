@@ -126,7 +126,7 @@ export default async function ProductPage({ params }: PageProps) {
                   sizes="(max-width: 768px) 100vw, 50vw"
                 />
               </div>
-              {product.images?.length > 1 && (
+              {product?.images?.length > 1 && (
                 <div className="flex gap-2 overflow-x-auto">
                   {product.images.slice(0, 4).map((img: any, i: number) => (
                     <div
