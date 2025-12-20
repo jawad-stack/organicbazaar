@@ -133,7 +133,7 @@ export default async function ProductPage({ params }: PageProps) {
                       key={i}
                       className="relative w-16 h-16 bg-muted rounded flex-shrink-0 cursor-pointer hover:ring-2 hover:ring-primary/50 transition-all"
                       onClick={() => img?.url && setImageUrl(img?.url)}
-                    >
+                      >
                       <Image
                         src={img?.url || img || "/placeholder.svg"}
                         alt={`${product.name} view ${i + 1}`}
