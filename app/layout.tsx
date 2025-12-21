@@ -150,7 +150,19 @@ export default function RootLayout({
             <div className="py-12 md:py-16 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-8 md:gap-12">
               {/* Brand Column */}
               <div className="space-y-4">
-              
+               <Link
+              href="/"
+              className="relative h-10 w-48 flex items-center hover:opacity-90 transition-opacity duration-200"
+            >
+              <Image
+                src="/apple-icon.png"
+                alt="Organic Bazaar"
+                fill
+                className="object-contain"
+                priority
+                sizes="192px"
+              />
+            </Link>
                 <p className="text-sm text-muted-foreground leading-relaxed max-w-xs">
                   Premium 100% certified organic, sustainably sourced products for a healthier lifestyle.
                 </p>
