@@ -2,6 +2,7 @@ import type React from "react"
 import type { Metadata } from "next"
 import { Geist, Geist_Mono } from "next/font/google"
 import { Analytics } from "@vercel/analytics/next"
+import { SpeedInsights } from "@vercel/speed-insights/next"
 import { CartIcon } from "@/components/cart-icon"
 import Link from "next/link"
 import { MobileNav } from "@/components/mobile-nav"
@@ -150,12 +151,19 @@ export default function RootLayout({
             <div className="py-12 md:py-16 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-8 md:gap-12">
               {/* Brand Column */}
               <div className="space-y-4">
-                <div className="flex items-center gap-2">
-                  <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center">
-                    <Leaf className="w-5 h-5 text-primary" />
-                  </div>
-                  <h3 className="font-bold text-foreground text-lg">Organic Bazaar</h3>
-                </div>
+               <Link
+              href="/"
+              className="relative h-10 w-48 flex items-center hover:opacity-90 transition-opacity duration-200"
+            >
+              <Image
+                src="/apple-icon.png"
+                alt="Organic Bazaar"
+                fill
+                className="object-contain"
+                priority
+                sizes="192px"
+              />
+            </Link>
                 <p className="text-sm text-muted-foreground leading-relaxed max-w-xs">
                   Premium 100% certified organic, sustainably sourced products for a healthier lifestyle.
                 </p>
