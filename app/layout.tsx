@@ -6,6 +6,7 @@ import { CartIcon } from "@/components/cart-icon"
 import Link from "next/link"
 import { MobileNav } from "@/components/mobile-nav"
 import { Leaf, Mail } from "lucide-react"
+import Image from "next/image"
 import "./globals.css"
 
 const _geist = Geist({ subsets: ["latin"] })
@@ -31,11 +32,13 @@ export const metadata: Metadata = {
     type: "website",
     siteName: "Organic Bazaar",
     locale: "en_US",
+    images: ["/apple-icon.png"],
   },
   twitter: {
     card: "summary_large_image",
     title: "Organic Products Store - Shop Pure & Sustainable",
     description: "Discover our curated selection of 100% organic, sustainably sourced products.",
+    images: ["/apple-icon.png"],
   },
   robots: {
     index: true,
@@ -48,23 +51,15 @@ export const metadata: Metadata = {
       "max-video-preview": -1,
     },
   },
-  icons: {
-    icon: [
-      {
-        url: "/icon-light-32x32.png",
-        media: "(prefers-color-scheme: light)",
-      },
-      {
-        url: "/icon-dark-32x32.png",
-        media: "(prefers-color-scheme: dark)",
-      },
-      {
-        url: "/icon.svg",
-        type: "image/svg+xml",
-      },
-    ],
-    apple: "/apple-icon.png",
-  },
+ icons: {
+  icon: [
+    { url: "/icon.svg", type: "image/svg+xml" },
+    { url: "/icon-light-32x32.png", media: "(prefers-color-scheme: light)" },
+    { url: "/icon-dark-32x32.png", media: "(prefers-color-scheme: dark)" },
+  ],
+  apple: "/apple-icon.png",
+},
+
   metadataBase: new URL(process.env.NEXT_PUBLIC_METADATA_BASE || "http://localhost:3000"),
 }
 
@@ -72,7 +67,6 @@ export const viewport = {
   width: "device-width",
   initialScale: 1,
   maximumScale: 1,
-  userScalable: false,
 }
 
 export default function RootLayout({
@@ -93,10 +87,16 @@ export default function RootLayout({
             {/* Brand */}
             <Link
               href="/"
-              className="text-lg font-bold text-foreground tracking-tight hover:text-primary transition-colors duration-200 flex items-center gap-2"
+              className="relative h-10 w-48 flex items-center hover:opacity-90 transition-opacity duration-200"
             >
-              <Leaf className="w-5 h-5" />
-              Organic Bazaar
+              <Image
+                src="/apple-icon.png"
+                alt="Organic Bazaar"
+                fill
+                className="object-contain"
+                priority
+                sizes="192px"
+              />
             </Link>
 
             {/* Desktop Navigation Links */}
@@ -190,7 +190,7 @@ export default function RootLayout({
                     aria-label="Instagram"
                   >
                     <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
-                      <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.057-1.645.069-4.849.069-3.204 0-3.584-.012-4.849-.069-3.25-.148-4.768-1.693-4.917-4.919-.057-1.265-.069-1.645-.069-4.849 0-3.204.013-3.583.069-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073z" />
+                      <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.057-1.645.069-4.849.069-3.204 0-3.584-.012-4.849-.069-4.358-.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.205.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.204-.013-3.663-.069-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073z" />
                       <circle cx="12" cy="12" r="3.5" fill="currentColor" />
                       <circle cx="18.5" cy="5.5" r="1.5" fill="currentColor" />
                     </svg>

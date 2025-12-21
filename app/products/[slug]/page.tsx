@@ -8,6 +8,7 @@ import { Card } from "@/components/ui/card"
 import { AddToCartButton } from "@/components/add-to-cart-button"
 import { ReviewForm } from "@/components/review-form"
 import { ReviewsList } from "@/components/reviews-list"
+import { ProductGallery } from "@/components/product-gallery"
 import { Check, Leaf, Package, Truck } from "lucide-react"
 
 interface PageProps {
@@ -115,36 +116,8 @@ export default async function ProductPage({ params }: PageProps) {
           {/* CHANGE: Media-first layout with tighter spacing */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 lg:gap-8">
             {/* Product Images - Gallery with carousel */}
-            <div className="flex flex-col gap-3">
-              <div className="relative aspect-square bg-muted rounded-lg overflow-hidden shadow-sm">
-                <Image
-                  src={imageUrl || "/placeholder.svg"}
-                  alt={product.name}
-                  fill
-                  className="object-cover"
-                  priority
-                  sizes="(max-width: 768px) 100vw, 50vw"
-                />
-              </div>
-              {product.images?.length > 1 && (
-                <div className="flex gap-2 overflow-x-auto">
-                  {product.images.slice(0, 4).map((img: any, i: number) => (
-                    <div
-                      key={i}
-                      className="relative w-16 h-16 bg-muted rounded flex-shrink-0 cursor-pointer hover:ring-2 hover:ring-primary/50 transition-all"
-                    >
-                      <Image
-                        src={img?.url || img || "/placeholder.svg"}
-                        alt={`${product.name} view ${i + 1}`}
-                        fill
-                        className="object-cover rounded"
-                        sizes="100px"
-                      />
-                    </div>
-                  ))}
-                </div>
-              )}
-            </div>
+          <ProductGallery images={product.images} productName={product.name} />
+
 
             {/* Product Details - Optimized for conversions */}
             <div className="flex flex-col gap-5">
