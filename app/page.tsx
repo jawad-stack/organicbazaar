@@ -202,7 +202,7 @@ export default async function HomePage() {
                     <div className="group cursor-pointer overflow-hidden rounded-lg transition-all duration-300 hover:-translate-y-1 hover:shadow-lg">
                       <div className="relative aspect-video bg-muted overflow-hidden">
                         <Image
-                          src={collection.image || (i === 0 ? "/organic-essentials.png": i === 1 ? "/sesonal-picks" : "/best-seelers.png" )}
+                          src={collection.image || (i === 0 ? "/organic-essentials.png": i === 1 ? "/sesonal-picks" : "/best-sellers.png" )}
                           alt={collection.name}
                           fill
                           className="object-cover group-hover:scale-105 transition-transform duration-500 ease-out"
