@@ -57,7 +57,7 @@ export default async function HomePage() {
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-center gap-4 text-center flex-wrap">
             <div className="flex items-center gap-2">
               <Zap className="w-4 h-4 flex-shrink-0" />
-              <span className="text-sm font-semibold">Limited Time: Get 20% OFF site-wide with code ORGANIC20</span>
+              <span className="text-sm font-semibold">Limited Time: Get 20% OFF site-wide</span>
             </div>
             <div className="hidden sm:flex items-center gap-2 text-sm">
               <span className="text-accent-foreground/80">Offer ends in:</span>
@@ -197,12 +197,12 @@ export default async function HomePage() {
 
             {collections.length > 0 ? (
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {serialCollections.map((collection: any) => (
+                {serialCollections.map((collection: any, i: number) => (
                   <Link key={collection._id} href={`/collections/${collection.slug}`}>
                     <div className="group cursor-pointer overflow-hidden rounded-lg transition-all duration-300 hover:-translate-y-1 hover:shadow-lg">
                       <div className="relative aspect-video bg-muted overflow-hidden">
                         <Image
-                          src={collection.image || "/placeholder.svg?height=300&width=400&query=organic+collection"}
+                          src={collection.image || (i === 0 ? "/organic-essentials.png": i === 1 ? "/seasonal-picks.png" : "/best-sellers.png" )}
                           alt={collection.name}
                           fill
                           className="object-cover group-hover:scale-105 transition-transform duration-500 ease-out"
