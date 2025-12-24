@@ -17,7 +17,7 @@ export const metadata: Metadata = {
   title: "Organic Bazaar - 100% Organic Products Online Store",
   description:
     "Shop premium 100% organic, sustainably sourced products at Organic Bazaar. From wellness to beauty, discover high-quality organic items for a healthier, sustainable lifestyle.",
-  generator: "Jawad Iqbal",
+  generator: "Organic Bazaar",
   keywords: [
     "organic products",
     "sustainable shopping",
