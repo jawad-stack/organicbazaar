@@ -216,8 +216,8 @@ export function OrderConfirmationContent() {
             <p className="text-sm text-muted-foreground mb-2">Questions about your order?</p>
             <p className="text-sm">
               Contact us at{" "}
-              <a href="mailto:jawadiqbal962@gmail.com" className="text-primary hover:underline">
-                jawadiqbal962@gmail.com
+              <a href="mailto:organicbazaar962@gmail.com" className="text-primary hover:underline">
+                organicbazaar962@gmail.com
               </a>
             </p>
           </div>

@@ -94,7 +94,7 @@ export default function PrivacyPage() {
           <section>
             <h2 className="text-2xl font-bold text-foreground mb-4">6. Contact Us</h2>
             <p>
-              If you have any questions about this Privacy Policy, please contact us at jawadiqbal962@gmail.com or call
+              If you have any questions about this Privacy Policy, please contact us at organicbazaar962@gmail.com or call
               1-800-ORG-GOOD.
             </p>
           </section>

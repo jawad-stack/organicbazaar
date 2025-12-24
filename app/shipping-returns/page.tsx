@@ -88,7 +88,7 @@ export default function ShippingReturnsPage() {
               <div>
                 <h3 className="text-lg font-semibold text-foreground mb-3">How to Return</h3>
                 <ol className="space-y-3 text-muted-foreground list-decimal list-inside">
-                  <li>Contact our support team at jawadiqbal962@gmail.com with your order number</li>
+                  <li>Contact our support team at organicbazaar962@gmail.com with your order number</li>
                   <li>Provide a reason for the return (optional feedback appreciated)</li>
                   <li>Receive a return shipping label and instructions</li>
                   <li>Ship the item back to us in its original condition</li>
@@ -132,7 +132,7 @@ export default function ShippingReturnsPage() {
               product, contact our support team and we'll arrange an exchange at no additional cost.
             </p>
             <p className="text-muted-foreground">
-              Email us at jawadiqbal962@gmail.com with your order number and what you'd like to exchange.
+              Email us at organicbazaar962@gmail.com with your order number and what you'd like to exchange.
             </p>
           </Card>
 
@@ -140,7 +140,7 @@ export default function ShippingReturnsPage() {
           <Card className="p-8 bg-primary/5 border-primary/20">
             <h2 className="text-2xl font-bold text-foreground mb-4">Questions?</h2>
             <p className="text-muted-foreground">
-              Our customer service team is happy to help. Contact us at jawadiqbal962@gmail.com or call
+              Our customer service team is happy to help. Contact us at organicbazaar962@gmail.com or call
               1-800-ORG-GOOD.
             </p>
           </Card>
