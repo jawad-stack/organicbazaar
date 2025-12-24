@@ -197,7 +197,7 @@ export default function RootLayout({
                     </svg>
                   </Link>
                   <Link
-                    href="https://instagram.com/organicbazaar962"
+                    href="https://instagram.com/organicbazaarofficial"
                     target="_blank"
                     rel="noopener noreferrer"
                     className="w-8 h-8 rounded-lg bg-muted hover:bg-primary/10 flex items-center justify-center text-foreground/60 hover:text-primary transition-all"

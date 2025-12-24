@@ -30,7 +30,7 @@ export default function ContactPage() {
           <div className="space-y-6">
             <Card className="p-6">
               <h3 className="text-lg font-semibold text-foreground mb-2">Email</h3>
-              <p className="text-muted-foreground">organicbazaar962@gmail.com</p>
+              <p className="text-muted-foreground">organicbazaarofficial@gmail.com</p>
               <p className="text-sm text-muted-foreground mt-1">We'll respond within 24 hours</p>
             </Card>
 
