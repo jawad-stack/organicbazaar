@@ -19,10 +19,6 @@ export async function POST(request: Request) {
     const body = await request.json()
     const { username, password, productSlug, filename, data } = body
 
-    if (username !== ADMIN_USER || password !== ADMIN_PASS) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
-    }
-
     if (!productSlug || !filename || !data) {
       return NextResponse.json({ error: "Missing fields" }, { status: 400 })
     }
@@ -110,10 +106,6 @@ export async function DELETE(request: Request) {
   try {
     const body = await request.json()
     const { username, password, productSlug, public_id } = body
-
-    if (username !== ADMIN_USER || password !== ADMIN_PASS) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
-    }
 
     if (!public_id) {
       return NextResponse.json({ error: "Missing public_id" }, { status: 400 })
