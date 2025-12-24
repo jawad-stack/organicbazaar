@@ -9,7 +9,6 @@ import Image from "next/image";
 export default function AdminUploadPage() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const [loggedIn, setLoggedIn] = useState(false);
   const [productSlug, setProductSlug] = useState("");
   const [products, setProducts] = useState<Array<any>>([]);
   // const [products, setProducts] = useState<Array<{ slug: string; name: string }>>([])
@@ -42,7 +41,6 @@ export default function AdminUploadPage() {
       });
 
       if (res.ok) {
-        setLoggedIn(true);
         setMessage(null);
       } else {
         const data = await res.json();
@@ -142,41 +140,15 @@ export default function AdminUploadPage() {
     }
   };
   useEffect(() => {
-    if (!loggedIn) return;
 
     fetchProducts();
-  }, [loggedIn]);
+  }, []);
 
   return (
     <main className="min-h-screen bg-background py-12 px-4">
       <div className="max-w-3xl mx-auto">
         <h1 className="text-2xl font-bold mb-6">Admin Image Upload</h1>
 
-        {!loggedIn ? (
-          <form onSubmit={handleLogin} className="space-y-4 max-w-md">
-            <div>
-              <Label htmlFor="username">Username</Label>
-              <Input
-                id="username"
-                value={username}
-                onChange={(e) => setUsername(e.target.value)}
-              />
-            </div>
-            <div>
-              <Label htmlFor="password">Password</Label>
-              <Input
-                id="password"
-                type="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-              />
-            </div>
-            <div>
-              <Button type="submit">Login</Button>
-            </div>
-            {message && <p className="text-sm text-red-500">{message}</p>}
-          </form>
-        ) : (
           <div className="space-y-6">
             <form onSubmit={handleUpload} className="space-y-4">
               <div>
@@ -239,7 +211,6 @@ export default function AdminUploadPage() {
                 <Button
                   variant="outline"
                   onClick={() => {
-                    setLoggedIn(false);
                     setUsername("");
                     setPassword("");
                     setMessage(null);
@@ -295,7 +266,6 @@ export default function AdminUploadPage() {
               </p>
             </div>
           </div>
-        )}
       </div>
     </main>
   );
