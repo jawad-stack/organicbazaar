@@ -57,7 +57,7 @@ export default async function HomePage() {
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-center gap-4 text-center flex-wrap">
             <div className="flex items-center gap-2">
               <Zap className="w-4 h-4 flex-shrink-0" />
-              <span className="text-sm font-semibold">Limited Time: Get 20% OFF site-wide with code ORGANIC20</span>
+              <span className="text-sm font-semibold">Limited Time: Get 20% OFF site-wide</span>
             </div>
             <div className="hidden sm:flex items-center gap-2 text-sm">
               <span className="text-accent-foreground/80">Offer ends in:</span>
