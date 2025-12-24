@@ -197,12 +197,12 @@ export default async function HomePage() {
 
             {collections.length > 0 ? (
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {serialCollections.map((collection: any) => (
+                {serialCollections.map((collection: any, i: number) => (
                   <Link key={collection._id} href={`/collections/${collection.slug}`}>
                     <div className="group cursor-pointer overflow-hidden rounded-lg transition-all duration-300 hover:-translate-y-1 hover:shadow-lg">
                       <div className="relative aspect-video bg-muted overflow-hidden">
                         <Image
-                          src={collection.image || "/placeholder.svg?height=300&width=400&query=organic+collection"}
+                          src={collection.image || (i === 0 ? "/organic-essentials.png": i === 1 ? "/sesonal-picks" : "/best-seelers.png" )}
                           alt={collection.name}
                           fill
                           className="object-cover group-hover:scale-105 transition-transform duration-500 ease-out"
