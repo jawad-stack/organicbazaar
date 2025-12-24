@@ -25,6 +25,9 @@ export const metadata: Metadata = {
     "natural products",
     "organic bazaar",
     "buy organic online",
+    "desi ghee", 
+    "pure honey",
+    "achaar",
   ],
   authors: [{ name: "Organic Bazaar" }],
   openGraph: {
