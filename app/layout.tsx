@@ -17,7 +17,7 @@ export const metadata: Metadata = {
   title: "Organic Bazaar - 100% Organic Products Online Store",
   description:
     "Shop premium 100% organic, sustainably sourced products at Organic Bazaar. From wellness to beauty, discover high-quality organic items for a healthier, sustainable lifestyle.",
-  generator: "v0.app",
+  generator: "Jawad Iqbal",
   keywords: [
     "organic products",
     "sustainable shopping",
@@ -52,14 +52,17 @@ export const metadata: Metadata = {
       "max-video-preview": -1,
     },
   },
- icons: {
+icons: {
   icon: [
+    "/favicon.ico", // ← PRIMARY (critical)
     { url: "/icon.svg", type: "image/svg+xml" },
     { url: "/icon-light-32x32.png", media: "(prefers-color-scheme: light)" },
     { url: "/icon-dark-32x32.png", media: "(prefers-color-scheme: dark)" },
   ],
+  shortcut: "/favicon.ico",
   apple: "/apple-icon.png",
 },
+
 
   metadataBase: new URL(process.env.NEXT_PUBLIC_METADATA_BASE || "http://localhost:3000"),
 }
