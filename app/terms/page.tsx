@@ -107,7 +107,7 @@ export default function TermsPage() {
           <section>
             <h2 className="text-2xl font-bold text-foreground mb-4">10. Contact Information</h2>
             <p>
-              If you have any questions about these Terms and Conditions, please contact us at jawadiqbal962@gmail.com
+              If you have any questions about these Terms and Conditions, please contact us at organicbazaarofficial@gmail.com
               or call 1-800-ORG-GOOD.
             </p>
           </section>

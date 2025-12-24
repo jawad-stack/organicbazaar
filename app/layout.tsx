@@ -17,7 +17,7 @@ export const metadata: Metadata = {
   title: "Organic Bazaar - 100% Organic Products Online Store",
   description:
     "Shop premium 100% organic, sustainably sourced products at Organic Bazaar. From wellness to beauty, discover high-quality organic items for a healthier, sustainable lifestyle.",
-  generator: "Jawad Iqbal",
+  generator: "Organic Bazaar",
   keywords: [
     "organic products",
     "sustainable shopping",
@@ -25,6 +25,9 @@ export const metadata: Metadata = {
     "natural products",
     "organic bazaar",
     "buy organic online",
+    "desi ghee", 
+    "pure honey",
+    "achaar",
   ],
   authors: [{ name: "Organic Bazaar" }],
   openGraph: {
@@ -194,7 +197,7 @@ export default function RootLayout({
                     </svg>
                   </Link>
                   <Link
-                    href="https://instagram.com/organicbazaar962"
+                    href="https://instagram.com/organicbazaarofficial"
                     target="_blank"
                     rel="noopener noreferrer"
                     className="w-8 h-8 rounded-lg bg-muted hover:bg-primary/10 flex items-center justify-center text-foreground/60 hover:text-primary transition-all"
