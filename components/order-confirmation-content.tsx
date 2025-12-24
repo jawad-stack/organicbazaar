@@ -52,7 +52,7 @@ export function OrderConfirmationContent() {
     if (typeof window !== "undefined" && window.gtag) {
       window.gtag("event", "conversion", {
         send_to: "AW-17816832290/TkLeCLPIytYbEKKS3a9C",
-        transaction_id: "", // optionally inject orderId
+        transaction_id: orderId || "no order id", // optionally inject orderId
       })
     }
   }, [])
