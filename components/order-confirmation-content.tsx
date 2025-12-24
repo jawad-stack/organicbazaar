@@ -48,6 +48,15 @@ export function OrderConfirmationContent() {
       return
     }
 
+      useEffect(() => {
+    if (typeof window !== "undefined" && window.gtag) {
+      window.gtag("event", "conversion", {
+        send_to: "AW-17816832290/TkLeCLPIytYbEKKS3a9C",
+        transaction_id: "", // optionally inject orderId
+      })
+    }
+  }, [])
+
     const fetchOrder = async () => {
       try {
         const response = await fetch(`/api/orders?orderId=${orderId}`)
