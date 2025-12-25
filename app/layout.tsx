@@ -4,6 +4,7 @@ import { Geist, Geist_Mono } from "next/font/google"
 import { Analytics } from "@vercel/analytics/next"
 import { SpeedInsights } from "@vercel/speed-insights/next"
 import { CartIcon } from "@/components/cart-icon"
+import Script from "next/script";
 import Link from "next/link"
 import { MobileNav } from "@/components/mobile-nav"
 import { Leaf, Mail } from "lucide-react"
@@ -87,6 +88,19 @@ export default function RootLayout({
         <meta name="theme-color" content="#6b9a7a" />
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+          {/* Google Ads Global Tag */}
+        <Script
+          src="https://www.googletagmanager.com/gtag/js?id=AW-17816832290"
+          strategy="afterInteractive"
+        />
+        <Script id="google-ads" strategy="afterInteractive">
+          {`
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', 'AW-17816832290');
+          `}
+        </Script>
       </head>
       <body className={`font-sans antialiased`} suppressHydrationWarning>
         <header className="sticky top-0 z-50 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/75 border-b border-border/50">
