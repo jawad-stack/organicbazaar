@@ -107,14 +107,15 @@ export default async function BlogPostPage({ params }: PageProps) {
         {/* Hero Image */}
         <section className="relative h-96 md:h-[500px] overflow-hidden">
           <Image
-            src={serializedPost.image || "/placeholder.svg?height=800&width=1200&query=organic+blog+hero"}
+            src={serializedPost.image || "/placeholder.svg?width=1200"}
             alt={serializedPost.title}
-            fill
-            className="object-cover"
+            width={1200}
+            height={800} // required by Next.js, but visually controlled
+            className="w-full h-auto object-cover"
             priority
-            width="100vw"
-            // sizes="100vw"
+            sizes="100vw"
           />
+
           <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent" />
         </section>
 
