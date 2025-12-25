@@ -60,8 +60,8 @@ export default async function HomePage() {
               <span className="text-sm font-semibold">Limited Time: Get 20% OFF site-wide</span>
             </div>
             <div className="hidden sm:flex items-center gap-2 text-sm">
-              <span className="text-accent-foreground/80">Offer ends in:</span>
-              <CountdownTimer initialDays={2} initialHours={10} />
+              <span className="text-accent-foreground/80">Offer ends on Sunday, Jan 11, 2026</span>
+              {/* <CountdownTimer initialDays={2} initialHours={10} /> */}
             </div>
           </div>
         </section>
